@@ -1,0 +1,1026 @@
+/* Mobile Responsive Optimizations for MiniPay */
+
+/* Base mobile-first styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Ensure proper viewport and touch targets */
+@media (max-width: 768px) {
+  /* Global spacing */
+  html,
+  body {
+    font-size: 16px;
+  }
+
+  /* Increase touch target sizes */
+  button,
+  input,
+  select,
+  textarea,
+  a {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* Improve form spacing */
+  form {
+    padding: 1.5rem 1rem;
+    width: 100%;
+  }
+
+  form > div,
+  form > fieldset {
+    margin-bottom: 2rem;
+    width: 100%;
+  }
+
+  /* Better label spacing */
+  label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  /* Input field improvements */
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="datetime-local"],
+  input[type="password"],
+  select,
+  textarea {
+    width: 100% !important;
+    padding: 1rem;
+    font-size: 16px; /* Prevents zoom on iOS */
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    color: inherit;
+    line-height: 1.5;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  input[type="email"]:focus,
+  input[type="datetime-local"]:focus,
+  input[type="password"]:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #22c7ff;
+    background: rgba(34, 199, 255, 0.1);
+  }
+
+  /* Button improvements */
+  button,
+  input[type="button"],
+  input[type="submit"] {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 0.75rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    border: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+
+  /* Card/Container spacing */
+  .card,
+  .container,
+  .modal,
+  .form-container {
+    padding: 1.5rem;
+    margin: 0;
+    width: 100%;
+  }
+
+  /* Reduce padding on mobile */
+  .p-6 {
+    padding: 1.5rem !important;
+  }
+
+  .p-4 {
+    padding: 1rem !important;
+  }
+
+  .p-2 {
+    padding: 0.5rem !important;
+  }
+
+  /* Better grid on mobile */
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Flex improvements */
+  .flex {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .flex-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .flex-between {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Text sizing */
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  h4 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  /* Better modal sizing */
+  .modal,
+  .dialog {
+    max-width: 100%;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 1.5rem 1.5rem 0 0;
+    padding: 1.5rem;
+  }
+
+  /* Improve select dropdowns */
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.5em 1.5em;
+    padding-right: 3rem;
+  }
+
+  /* Better spacing for form groups */
+  .form-group {
+    margin-bottom: 2rem;
+    width: 100%;
+  }
+
+  /* Improve error messages */
+  .error-message,
+  .error {
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+  }
+
+  /* Better success/error toast positioning */
+  .toast {
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    max-width: calc(100% - 2rem);
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+
+  /* Improve table on mobile */
+  table {
+    font-size: 0.95rem;
+    width: 100%;
+  }
+
+  table th,
+  table td {
+    padding: 0.75rem;
+  }
+
+  /* Better list spacing */
+  ul,
+  ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+  }
+
+  /* Improve badge/tag sizing */
+  .badge,
+  .tag {
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    border-radius: 0.5rem;
+    display: inline-block;
+  }
+
+  /* Better spacing for sections */
+  section {
+    margin-bottom: 2.5rem;
+    padding: 0 1rem;
+  }
+
+  /* Improve navigation */
+  nav {
+    padding: 1rem;
+  }
+
+  nav a,
+  nav button {
+    padding: 0.75rem 1rem;
+    margin: 0.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  /* Mobile menu navigation grid */
+  nav .space-y-1 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  nav .space-y-1 > * {
+    margin: 0 !important;
+  }
+
+  /* Full width buttons */
+  nav .space-y-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  nav .space-y-2 > * {
+    width: 100%;
+  }
+
+  /* Better spacing for alerts */
+  .alert {
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.75rem;
+    line-height: 1.6;
+  }
+
+  /* Improve checkbox/radio sizing */
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    margin-right: 0.75rem;
+  }
+
+  /* Better spacing for lists */
+  .list-item {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: 0.75rem;
+  }
+
+  /* Improve focus states for accessibility */
+  button:focus,
+  input:focus,
+  select:focus,
+  textarea:focus,
+  a:focus {
+    outline: 2px solid #22c7ff;
+    outline-offset: 2px;
+  }
+
+  /* Better spacing for inline elements */
+  .inline-block {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  /* Improve spacing for descriptions */
+  .description,
+  .help-text {
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* Spacing utilities */
+  .space-y-2 > * + * {
+    margin-top: 0.5rem;
+  }
+
+  .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+
+  .space-y-6 > * + * {
+    margin-top: 1.5rem;
+  }
+
+  .space-y-8 > * + * {
+    margin-top: 2rem;
+  }
+
+  /* Better spacing for buttons in groups */
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+
+  /* Improve card layouts */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Better spacing for content */
+  main {
+    padding: 0;
+  }
+
+  /* Improve readability */
+  body {
+    line-height: 1.6;
+  }
+}
+
+/* Extra small devices (< 480px) */
+@media (max-width: 480px) {
+  /* Even more aggressive spacing */
+  form > div,
+  form > fieldset {
+    margin-bottom: 1.75rem;
+  }
+
+  button,
+  input[type="button"],
+  input[type="submit"] {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Stack everything vertically */
+  .flex-row,
+  .flex-between {
+    flex-direction: column;
+  }
+
+  /* Reduce modal padding */
+  .modal,
+  .dialog {
+    padding: 1.25rem;
+  }
+
+  /* Better spacing for small screens */
+  .p-6 {
+    padding: 1.25rem !important;
+  }
+
+  .p-4 {
+    padding: 1rem !important;
+  }
+
+  /* Improve readability */
+  body {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* Better form spacing */
+  form {
+    padding: 1.25rem 1rem;
+  }
+
+  /* Input improvements */
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="datetime-local"],
+  input[type="password"],
+  select,
+  textarea {
+    padding: 0.875rem;
+    font-size: 16px;
+  }
+
+  /* Better button sizing */
+  button,
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 48px;
+  }
+
+  /* Improve spacing */
+  section {
+    margin-bottom: 2rem;
+    padding: 0 0.75rem;
+  }
+
+  /* Better list spacing */
+  ul,
+  ol {
+    margin-left: 1.25rem;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* Reduce vertical spacing in landscape */
+  form > div {
+    margin-bottom: 0.75rem;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+  }
+
+  h1,
+  h2,
+  h3 {
+    margin-bottom: 0.25rem;
+  }
+
+  /* Reduce modal height */
+  .modal {
+    max-height: 80vh;
+  }
+}
+
+/* MiniPay specific optimizations */
+@media (max-width: 768px) {
+  /* MiniPay badge positioning */
+  .minipay-badge {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 50;
+  }
+
+  /* MiniPay button styling */
+  .minipay-button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  /* MiniPay form optimization */
+  .minipay-form {
+    padding: 1rem;
+    max-width: 100%;
+  }
+
+  .minipay-form input,
+  .minipay-form select,
+  .minipay-form textarea {
+    font-size: 16px; /* Prevents iOS zoom */
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  /* MiniPay transaction feedback */
+  .transaction-feedback {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 50vh;
+    overflow-y: auto;
+    border-radius: 1rem 1rem 0 0;
+  }
+}
+
+
+/* Mobile menu improvements */
+.glass-card {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Mobile menu sections */
+.glass-card nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Menu section titles */
+.glass-card h3 {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+/* Menu items grid - 2 columns on mobile */
+.glass-card .space-y-1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.glass-card .space-y-1 > a,
+.glass-card .space-y-1 > button {
+  margin: 0 !important;
+  padding: 0.75rem !important;
+  font-size: 0.875rem;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Full width sections */
+.glass-card .space-y-2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.glass-card .space-y-2 > * {
+  width: 100%;
+}
+
+/* Icon sizing in mobile menu */
+.glass-card .space-y-1 .h-4 {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Text truncation in mobile menu */
+.glass-card .truncate {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  max-width: 100%;
+}
+
+/* Amount input buttons - 3 column grid on mobile */
+.grid.grid-cols-3 {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 0.5rem !important;
+  flex-direction: row !important;
+}
+
+.grid.grid-cols-3 > button,
+.grid.grid-cols-3 > div > button {
+  width: 100% !important;
+  padding: 0.75rem 0.5rem !important;
+  font-size: 0.875rem !important;
+  min-height: 44px !important;
+  display: block !important;
+  flex-direction: row !important;
+}
+
+/* Override flex-wrap for amount buttons */
+.flex.gap-2.mt-2.flex-wrap {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 0.5rem !important;
+}
+
+
+/* Header mobile fixes */
+@media (max-width: 768px) {
+  /* Header container */
+  header {
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .container-nav {
+    padding: 0 !important;
+    overflow: visible !important;
+    width: 100% !important;
+  }
+
+  /* Header flex layout */
+  header .flex {
+    gap: 0.5rem !important;
+  }
+
+  /* Logo and nav on mobile */
+  header .flex.items-center.justify-between {
+    gap: 0.5rem !important;
+  }
+
+  /* Hide notification on mobile */
+  @media (max-width: 640px) {
+    header .hidden.sm\:block {
+      display: none !important;
+    }
+  }
+
+  /* Hamburger menu button */
+  header button[aria-label*="menu"],
+  header button[aria-label*="Close"] {
+    padding: 0.5rem !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Prevent header overflow */
+  header nav {
+    display: none !important;
+  }
+
+  /* Logo sizing on mobile */
+  header img {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  /* Header text on mobile */
+  header span {
+    font-size: 0.875rem !important;
+  }
+}
+
+
+/* GLOBAL MOBILE FIXES - FORCE HORIZONTAL LAYOUTS */
+@media (max-width: 768px) {
+  /* Force all flex to stay horizontal unless explicitly column */
+  .flex:not(.flex-col) {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+  }
+
+  /* Step indicator - FORCE HORIZONTAL */
+  .flex.items-center.justify-center.gap-2 {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    padding: 0.5rem 0 !important;
+    gap: 0.5rem !important;
+  }
+
+  /* Step circles - NO WRAPPING */
+  .flex.items-center.justify-center.gap-2 > * {
+    flex-shrink: 0 !important;
+    min-width: auto !important;
+  }
+
+  /* Step connectors */
+  .flex.items-center.justify-center.gap-2 .h-1 {
+    flex-shrink: 0 !important;
+    min-width: 2rem !important;
+  }
+
+  /* Back and Close buttons - FORCE HORIZONTAL */
+  .flex.items-center.justify-between.gap-2 {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 0.5rem !important;
+  }
+
+  .flex.items-center.justify-between.gap-2 > * {
+    flex-shrink: 0 !important;
+  }
+
+  /* Amount input buttons - FORCE 3 COLUMN GRID */
+  .grid.grid-cols-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.5rem !important;
+  }
+
+  .grid.grid-cols-3 > button {
+    width: 100% !important;
+    display: block !important;
+  }
+
+  /* Card padding on mobile */
+  .glass-card.p-4 {
+    padding: 1rem !important;
+  }
+
+  /* Reduce spacing in card */
+  .glass-card.p-4 > * {
+    margin-bottom: 1rem !important;
+  }
+
+  .glass-card.p-4 > *:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  /* Social icons - FORCE HORIZONTAL */
+  .flex.items-center.gap-4 {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 0.5rem !important;
+  }
+
+  .flex.items-center.gap-4 > * {
+    flex-shrink: 0 !important;
+  }
+}
+
+
+/* Footer mobile fixes */
+@media (max-width: 768px) {
+  /* Keep social icons horizontal */
+  footer .flex.items-center.gap-4 {
+    flex-wrap: nowrap !important;
+    gap: 0.5rem !important;
+  }
+
+  /* Social icon buttons */
+  footer .flex.items-center.gap-4 > a {
+    padding: 0.5rem !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Social icon SVG */
+  footer .flex.items-center.gap-4 svg {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+  }
+
+  /* Footer grid on mobile */
+  footer .grid.grid-cols-1 {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  /* Footer sections */
+  footer .grid.grid-cols-2 {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  /* Footer text */
+  footer p {
+    font-size: 0.875rem !important;
+  }
+
+  /* Footer links */
+  footer a {
+    font-size: 0.875rem !important;
+  }
+}
+
+
+/* Amount input mobile fixes */
+@media (max-width: 768px) {
+  /* Increase right padding for amount input on mobile */
+  input[inputMode="decimal"] {
+    padding-right: 3.5rem !important;
+  }
+
+  /* Ensure currency badge doesn't overlap */
+  .absolute.right-2.top-1\/2 {
+    right: 0.5rem !important;
+    gap: 0.25rem !important;
+  }
+
+  /* Currency badge sizing */
+  .absolute.right-2.top-1\/2 span {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.75rem !important;
+    white-space: nowrap !important;
+  }
+
+  /* MAX button sizing */
+  .absolute.right-2.top-1\/2 button {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+
+/* Number input spinner improvements for mobile */
+@media (max-width: 768px) {
+  /* Make number input spinners larger and more touch-friendly */
+  input[type="number"] {
+    font-size: 16px !important; /* Prevents iOS zoom */
+    padding: 0.75rem !important;
+    height: 48px !important;
+  }
+
+  /* Webkit browsers (Chrome, Safari) - number input spinners */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    opacity: 1;
+    height: 100%;
+    width: 3rem;
+  }
+
+  /* Custom spinner styling for better touch targets */
+  input[type="number"] {
+    position: relative;
+  }
+
+  /* Firefox number input */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  /* Ensure number inputs are fully responsive */
+  input[type="number"],
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  select,
+  textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Better focus state for number inputs */
+  input[type="number"]:focus {
+    outline: 2px solid #22c7ff !important;
+    outline-offset: 2px !important;
+  }
+}
+
+/* Extra small devices - number input */
+@media (max-width: 480px) {
+  input[type="number"] {
+    font-size: 16px !important;
+    padding: 0.75rem !important;
+    height: 48px !important;
+    min-height: 48px !important;
+  }
+
+  /* Ensure spinners are accessible */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    height: 100%;
+    width: 2.5rem;
+  }
+}
+
+
+/* Hamburger menu responsive fixes */
+@media (max-width: 768px) {
+  /* Menu panel - full width on mobile */
+  .glass-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  /* Ensure menu doesn't overflow */
+  .glass-card nav {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  /* Menu items - prevent text overflow */
+  .glass-card a,
+  .glass-card button {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    min-width: 0 !important;
+  }
+
+  /* Menu item text - truncate properly */
+  .glass-card span {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* Reduce padding on very small screens */
+  @media (max-width: 480px) {
+    .glass-card {
+      width: 100% !important;
+    }
+
+    .glass-card nav {
+      padding: 0.75rem !important;
+    }
+
+    .glass-card a,
+    .glass-card button {
+      padding: 0.5rem 0.75rem !important;
+      font-size: 0.75rem !important;
+      gap: 0.5rem !important;
+    }
+
+    .glass-card h3 {
+      font-size: 0.65rem !important;
+      padding: 0 0.5rem !important;
+    }
+  }
+}
+
+/* Ensure menu panel takes full width on mobile */
+@media (max-width: 640px) {
+  .absolute.right-0.top-0.h-full {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Menu header */
+  .glass-card .flex.items-center.justify-between.p-4 {
+    padding: 1rem 0.75rem !important;
+  }
+
+  /* Menu sections */
+  .glass-card .mb-4 {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Menu links */
+  .glass-card .space-y-1 > * {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.875rem !important;
+  }
+
+  /* Prevent horizontal scroll */
+  .glass-card {
+    overflow-x: hidden !important;
+  }
+
+  /* Action buttons in menu */
+  .glass-card .space-y-2 {
+    padding: 0 0.75rem !important;
+  }
+
+  .glass-card .space-y-2 > * {
+    width: 100% !important;
+  }
+}

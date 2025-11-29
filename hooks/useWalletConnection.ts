@@ -1,0 +1,312 @@
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useAccount, useDisconnect, useChainId } from 'wagmi';
+import { useAppKit, useAppKitState } from '@reown/appkit/react';
+import { celoSepoliaNetwork, celoMainnetNetwork } from '@/config/wagmi';
+import { toast } from 'react-hot-toast';
+
+export interface WalletConnectionState {
+  isConnected: boolean;
+  address: string | undefined;
+  chainId: number | undefined;
+  isOnBSC: boolean;
+  isConnecting: boolean;
+  error: string | null;
+}
+
+// Module-level tracking to ensure toast only shows once globally across all hook instances
+let globalToastShownForAddress: string | null = null;
+
+export function useWalletConnection() {
+  const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
+  const chainId = useChainId();
+  
+  const { open, close } = useAppKit();
+  const { open: isModalOpen } = useAppKitState();
+  
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [connectionAttempts, setConnectionAttempts] = useState(0);
+  
+  // Use refs to track timeouts and intervals for proper cleanup
+  const connectionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const checkConnectionIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const cleanupTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Get the appropriate Celo network based on environment
+  // Always use Sepolia for now (testnet)
+  const celoNetwork = celoSepoliaNetwork;
+  
+  // Check if user is on Celo network
+  const isOnCelo = chainId === celoMainnetNetwork.id || chainId === celoSepoliaNetwork.id;
+
+  // Switch to Celo network
+  const switchToCelo = useCallback(async () => {
+    try {
+      if (!window.ethereum) {
+        throw new Error('MetaMask not detected');
+      }
+
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: `0x${celoNetwork.id.toString(16)}` }],
+      });
+    } catch (error: unknown) {
+      // If network doesn't exist, add it
+      if ((error as { code?: number }).code === 4902) {
+        try {
+          await window.ethereum?.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: `0x${celoNetwork.id.toString(16)}`,
+              chainName: celoNetwork.name,
+              nativeCurrency: celoNetwork.nativeCurrency,
+              rpcUrls: celoNetwork.rpcUrls.default.http,
+              blockExplorerUrls: celoNetwork.blockExplorers ? [celoNetwork.blockExplorers.default.url] : [],
+            }],
+          });
+        } catch (addError) {
+          console.error('Failed to add Celo network:', addError);
+          throw new Error('Failed to add Celo network to MetaMask');
+        }
+      } else {
+        console.error('Failed to switch to Celo network:', error);
+        throw new Error('Failed to switch to Celo network');
+      }
+    }
+  }, [celoNetwork]);
+
+  // Legacy exports for backward compatibility
+  const switchToBSC = switchToCelo;
+  const switchToSomnia = switchToCelo;
+  const isOnBSC = isOnCelo;
+  const isOnSomnia = isOnCelo;
+
+  // Clear all timeouts and intervals
+  const clearAllTimers = useCallback(() => {
+    if (connectionTimeoutRef.current) {
+      clearTimeout(connectionTimeoutRef.current);
+      connectionTimeoutRef.current = null;
+    }
+    if (checkConnectionIntervalRef.current) {
+      clearInterval(checkConnectionIntervalRef.current);
+      checkConnectionIntervalRef.current = null;
+    }
+    if (cleanupTimeoutRef.current) {
+      clearTimeout(cleanupTimeoutRef.current);
+      cleanupTimeoutRef.current = null;
+    }
+  }, []);
+
+  // Connect wallet with proper error handling
+  const connectWallet = useCallback(async () => {
+    try {
+      // Clear any existing timers
+      clearAllTimers();
+      
+      setIsConnecting(true);
+      setError(null);
+      setConnectionAttempts(prev => prev + 1);
+
+      console.log('🔗 Opening AppKit wallet modal...');
+      
+      // Open AppKit modal
+      open();
+
+      // Set a timeout for warning about slow connection
+      connectionTimeoutRef.current = setTimeout(() => {
+        console.warn('⚠️ Wallet connection taking longer than expected...');
+        setError('Connection is taking longer than expected. Please check your wallet extension.');
+      }, 15000); // 15 seconds timeout
+
+      // Set a final timeout to cleanup if connection fails
+      cleanupTimeoutRef.current = setTimeout(() => {
+        console.warn('⚠️ Connection timeout reached, cleaning up...');
+        clearAllTimers();
+        setIsConnecting(false);
+        setError('Connection timeout. Please try again.');
+        toast.error('Connection timeout. Please try again.', {
+          duration: 5000,
+        });
+      }, 45000); // 45 seconds final timeout
+
+    } catch (error) {
+      console.error('❌ Wallet connection failed:', error);
+      clearAllTimers();
+      setIsConnecting(false);
+      setError(error instanceof Error ? error.message : 'Failed to connect wallet');
+    }
+  }, [open, clearAllTimers]);
+
+  // Disconnect wallet
+  const disconnectWallet = useCallback(() => {
+    try {
+      clearAllTimers();
+      disconnect();
+      setError(null);
+      setConnectionAttempts(0);
+      setIsConnecting(false);
+      // Reset the global toast tracking so we can show it again on next connection
+      globalToastShownForAddress = null;
+      console.log('✅ Wallet disconnected');
+      toast.success('Wallet disconnected', {
+        duration: 2000,
+      });
+    } catch (error) {
+      console.error('❌ Failed to disconnect wallet:', error);
+      setError('Failed to disconnect wallet');
+      toast.error('Failed to disconnect wallet', {
+        duration: 3000,
+      });
+    }
+  }, [disconnect, clearAllTimers]);
+
+  // Handle successful wallet connection - auto-close modal
+  useEffect(() => {
+    if (isConnected && address) {
+      // Only show toast and close modal if we haven't already done so for this address globally
+      const currentAddress = address.toLowerCase();
+      if (globalToastShownForAddress !== currentAddress) {
+        console.log('✅ Wallet connected successfully');
+        clearAllTimers();
+        setIsConnecting(false);
+        setError(null);
+        
+        // Mark that we've shown the toast for this address globally
+        globalToastShownForAddress = currentAddress;
+        
+        // Show success toast only once per connection (globally across all components)
+        toast.success('Wallet connected successfully! 🎉', {
+          duration: 3000,
+          id: 'wallet-connected-success', // Use a unique ID to prevent duplicate toasts
+          style: {
+            background: '#10B981',
+            color: '#fff',
+          },
+        });
+        
+        // Auto-close AppKit modal after successful connection (check if modal is open)
+        // Check isModalOpen inside the effect, not in dependencies to prevent re-triggering on navigation
+        if (isModalOpen) {
+          setTimeout(() => {
+            close();
+            console.log('✅ AppKit modal closed automatically after wallet connection');
+          }, 500); // Reduced delay for faster close
+        }
+      }
+    } else if (!isConnected) {
+      // Reset the global tracking when disconnected so we can show toast again on next connection
+      globalToastShownForAddress = null;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected, address, clearAllTimers, close]); // isModalOpen intentionally omitted to prevent re-triggering on navigation
+
+  // Handle modal state changes - close modal when user dismisses it
+  useEffect(() => {
+    // If modal is closed but we're still connecting, reset the connecting state
+    if (!isModalOpen && isConnecting && !isConnected) {
+      console.log('🔄 Modal closed during connection, resetting state...');
+      clearAllTimers();
+      setIsConnecting(false);
+      setError(null); // Clear error when user closes modal
+      // Don't set error here as user might have intentionally closed the modal
+    }
+    
+    // Ensure modal is closed when not needed
+    if (!isModalOpen && isConnected && address) {
+      // Modal should already be closed, but ensure it stays closed
+      console.log('✅ Wallet connected, ensuring modal stays closed');
+    }
+  }, [isModalOpen, isConnecting, isConnected, address, clearAllTimers]);
+  
+  // Add keyboard handler to close modal on Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isModalOpen) {
+        console.log('🔄 Escape key pressed, closing modal...');
+        close();
+        clearAllTimers();
+        setIsConnecting(false);
+        setError(null);
+      }
+    };
+    
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isModalOpen, close, clearAllTimers]);
+
+  // Auto-switch to Celo network when connected to wrong network
+  // DISABLED: Let user manually switch networks in MetaMask
+  // useEffect(() => {
+  //   if (isConnected && !isOnCelo && chainId) {
+  //     console.log(`⚠️ Connected to wrong network (${chainId}), switching to Celo...`);
+  //     toast('Switching to Celo network...', {
+  //       duration: 3000,
+  //       icon: '🔄',
+  //       style: {
+  //         background: '#F59E0B',
+  //         color: '#fff',
+  //       },
+  //     });
+  //     
+  //     switchToCelo().catch(error => {
+  //       console.error('Failed to switch network:', error);
+  //       setError('Please switch to Celo network in your wallet');
+  //       toast.error('Please switch to Celo network in your wallet', {
+  //         duration: 5000,
+  //       });
+  //     });
+  //   }
+  // }, [isConnected, isOnCelo, chainId, switchToCelo]);
+
+  // Reset error when connection succeeds
+  useEffect(() => {
+    if (isConnected && error) {
+      setError(null);
+    }
+  }, [isConnected, error]);
+
+  // Auto-retry connection on network issues (with exponential backoff)
+  useEffect(() => {
+    if (error && error.includes('network') && connectionAttempts < 3) {
+      const retryDelay = Math.pow(2, connectionAttempts) * 2000; // 2s, 4s, 8s
+      const retryTimeout = setTimeout(() => {
+        console.log(`🔄 Retrying connection (attempt ${connectionAttempts + 1})...`);
+        connectWallet();
+      }, retryDelay);
+      
+      return () => clearTimeout(retryTimeout);
+    }
+  }, [error, connectionAttempts, connectWallet]);
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      clearAllTimers();
+    };
+  }, [clearAllTimers]);
+
+  return {
+    // State
+    isConnected,
+    address,
+    chainId,
+    isOnCelo,
+    isConnecting,
+    error,
+    
+    // Actions
+    connectWallet,
+    disconnectWallet,
+    switchToCelo,
+    
+    // Legacy exports for backward compatibility
+    isOnBSC,
+    isOnSomnia,
+    switchToBSC,
+    switchToSomnia,
+    
+    // Utils
+    connectionAttempts,
+  };
+} 

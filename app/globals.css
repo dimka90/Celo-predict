@@ -1,0 +1,725 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Dark Theme Design System - BSC/Binance + Prediction Markets */
+:root {
+  /* Background Colors - Professional Deep Blues */
+  --bg-main: #0F1419;
+  --bg-card: rgba(31, 41, 55, 0.5);
+  --bg-overlay: rgba(0, 0, 0, 0.6);
+  
+  /* Border Colors */
+  --border-card: rgba(255, 193, 7, 0.08);
+  --border-input: rgba(255, 193, 7, 0.12);
+  
+  /* Text Colors */
+  --text-primary: #FFFFFF;
+  --text-secondary: #E5E7EB;
+  --text-muted: #9CA3AF;
+  --text-accent: #FFC107;
+  
+  /* BSC/Binance Brand Colors */
+  --bsc-yellow: #FFC107;      /* Binance Yellow - Primary */
+  --bsc-gold: #F7B600;        /* Gold accent */
+  --bsc-blue: #1F3A5F;        /* Deep Blue */
+  --bsc-dark: #0F1419;        /* Dark Navy */
+  --bsc-light: #FFFFFF;       /* Light */
+  
+  /* Prediction Market Unique Colors */
+  --market-rise: #10B981;     /* Emerald Green - Bullish/Rise */
+  --market-fall: #EF4444;     /* Red - Bearish/Fall */
+  --market-neutral: #8B5CF6;  /* Purple - Neutral/Balanced */
+  --market-hot: #FF6B6B;      /* Coral Red - Hot markets */
+  
+  /* Semantic Colors */
+  --color-accent: #FFC107;
+  --color-accent-2: #10B981;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  
+  /* Alias for easier access */
+  --primary: var(--bsc-yellow);
+  --secondary: var(--market-rise);
+  --accent: var(--market-neutral);
+  
+  /* Gradients */
+  --gradient-main: linear-gradient(135deg, #0F1419 0%, #1F2937 50%, #111827 100%);
+  --gradient-bsc: linear-gradient(135deg, #FFC107 0%, #F7B600 50%, #FFD54F 100%);
+  --gradient-primary: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+  --gradient-secondary: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  --gradient-market: linear-gradient(135deg, #FFC107 0%, #10B981 50%, #8B5CF6 100%);
+  
+  /* Spacing */
+  --section-padding: clamp(2rem, 5vw, 4rem);
+  --container-padding: clamp(1rem, 3vw, 2rem);
+}
+
+/* Base Styles */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--gradient-main);
+  min-height: 100vh;
+  color: var(--text-secondary);
+  font-size: 16px; /* Standard body font size */
+  line-height: 1.5; /* Standard line height */
+}
+
+/* Component Base Classes */
+@layer components {
+  .container {
+    @apply max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-20;
+  }
+
+  .container-wide {
+    @apply max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-20;
+  }
+
+  /* Ensure consistent container alignment */
+  .container-nav {
+    @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-20;
+  }
+
+  .section-padding {
+    @apply py-16 sm:py-20 lg:py-24;
+  }
+
+  /* Glassmorphism Card - BSC Professional */
+  .glass-card {
+    background: rgba(31, 41, 55, 0.7);
+    border: 1px solid rgba(255, 193, 7, 0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .glass-card:hover {
+    background: rgba(31, 41, 55, 0.85);
+    border-color: rgba(255, 193, 7, 0.2);
+    box-shadow: 0 12px 40px rgba(255, 193, 7, 0.15);
+    transform: translateY(-2px);
+  }
+
+  /* Modern Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 border border-transparent text-base font-medium rounded-button transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+    color: #000;
+    box-shadow: 0 4px 16px rgba(255, 193, 7, 0.25);
+    font-weight: 600;
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.15) saturate(1.1);
+    transform: scale(1.02);
+    box-shadow: 0 8px 24px rgba(255, 193, 7, 0.4);
+  }
+
+  .btn-secondary {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25);
+    font-weight: 600;
+  }
+
+  .btn-secondary:hover {
+    filter: brightness(1.1);
+    transform: scale(1.02);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .btn-outline:hover {
+    background: var(--color-accent);
+    color: #000;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+  }
+
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+  }
+
+  /* Gradient Text - Market Dynamics */
+  .gradient-text {
+    background: var(--gradient-market);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: gradient-flow 4s ease infinite;
+  }
+
+  /* Navigation Header - Professional BSC */
+  .nav-glass {
+    background: rgba(15, 20, 25, 0.95);
+    border-bottom: 1px solid rgba(255, 193, 7, 0.08);
+    backdrop-filter: blur(16px);
+  }
+
+  /* Stats Cards */
+  .stats-card {
+    @apply glass-card text-center;
+  }
+
+  .stats-card .stat-value {
+    @apply text-2xl font-bold gradient-text mb-1;
+  }
+
+  .stats-card .stat-label {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  /* Pool Cards */
+  .pool-card {
+    @apply glass-card cursor-pointer overflow-hidden;
+    transition: all 0.3s ease;
+  }
+
+  .pool-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .trending-badge {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .category-badge {
+    background: var(--gradient-primary);
+    color: #000;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-weight: 600;
+  }
+
+  /* Enhanced Card Designs */
+  .prediction-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .prediction-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  }
+
+  .prediction-card:hover {
+    transform: translateY(-8px) scale(1.02);
+  }
+
+  /* Gradient Radial Background */
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+
+  /* Line Clamp Utility */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Utilities */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Enhanced Shimmer Effect */
+  .shimmer-effect {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer-effect::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    animation: shimmer-slide 2s infinite;
+  }
+
+  @keyframes shimmer-slide {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
+  /* Glow Effects - Market Colors */
+  .glow-yellow {
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.25);
+  }
+
+  .glow-green {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+  }
+
+  .glow-purple {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+  }
+
+  /* BSC/Market Color Utilities */
+  .text-bsc-yellow { color: var(--bsc-yellow); }
+  .text-market-rise { color: var(--market-rise); }
+  .text-market-fall { color: var(--market-fall); }
+  .text-market-neutral { color: var(--market-neutral); }
+  .text-market-hot { color: var(--market-hot); }
+  
+  .bg-bsc-yellow { background-color: var(--bsc-yellow); }
+  .bg-market-rise { background-color: var(--market-rise); }
+  .bg-market-fall { background-color: var(--market-fall); }
+  .bg-market-neutral { background-color: var(--market-neutral); }
+  .bg-market-hot { background-color: var(--market-hot); }
+  
+  .from-bsc-yellow { --tw-gradient-from: var(--bsc-yellow); }
+  .to-market-rise { --tw-gradient-to: var(--market-rise); }
+  .from-market-rise { --tw-gradient-from: var(--market-rise); }
+  .to-market-neutral { --tw-gradient-to: var(--market-neutral); }
+  .from-market-neutral { --tw-gradient-from: var(--market-neutral); }
+  .to-market-fall { --tw-gradient-to: var(--market-fall); }
+
+  /* Animated Gradient Borders */
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background-size: 200% 200%;
+    animation: gradient-border-flow 3s ease infinite;
+  }
+
+  @keyframes gradient-border-flow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+}
+
+/* Animation Improvements */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .animate-on-scroll.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Floating Animation */
+  .float-animation {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+}
+
+/* Focus Styles */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Selection Styles */
+::selection {
+  background-color: rgba(34, 199, 255, 0.3);
+  color: var(--text-primary);
+}
+
+/* Custom Swiper Styles */
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--color-accent) !important;
+}
+
+.swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: var(--color-accent) !important;
+}
+
+/* Wallet Button Custom Styling */
+.wallet-adapter-button {
+  @apply btn-outline !important;
+  font-family: var(--font-onest) !important;
+  border-radius: 12px !important;
+}
+
+.wallet-adapter-button:not([disabled]):hover {
+  box-shadow: 0 0 20px rgba(34, 199, 255, 0.3) !important;
+}
+
+/* Swiper Pagination Styles */
+.trending-swiper .swiper-pagination {
+  position: static !important;
+  margin-top: 1.5rem;
+}
+
+.trending-swiper .swiper-pagination-bullet {
+  background: rgba(34, 199, 255, 0.3) !important;
+  opacity: 1 !important;
+  width: 12px !important;
+  height: 12px !important;
+  margin: 0 6px !important;
+  transition: all 0.3s ease !important;
+}
+
+.trending-swiper .swiper-pagination-bullet-active {
+  background: #22C7FF !important;
+  transform: scale(1.2) !important;
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Enhanced animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.6s ease-out;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes gradient-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Reown AppKit Custom Styling - BSC Theme */
+w3m-modal,
+w3m-network-button,
+w3m-connect-button,
+w3m-account-button {
+  --w3m-font-family: var(--font-onest), system-ui, sans-serif !important;
+  --w3m-accent: #FFC107 !important;
+  --w3m-color-mix: #FFC107 !important;
+  --w3m-color-mix-strength: 20 !important;
+  --w3m-border-radius-master: 12px !important;
+  
+  /* Background colors to match BSC design */
+  --w3m-background-color: #0F1419 !important;
+  --w3m-foreground-color: rgba(31, 41, 55, 0.95) !important;
+  
+  /* Text colors */
+  --w3m-text-primary-color: #FFFFFF !important;
+  --w3m-text-secondary-color: #E5E7EB !important;
+  --w3m-text-tertiary-color: #9CA3AF !important;
+  
+  /* Button colors */
+  --w3m-button-primary-color: #FFC107 !important;
+  --w3m-button-secondary-color: rgba(255, 255, 255, 0.05) !important;
+  
+  /* Border colors */
+  --w3m-border-color: rgba(255, 193, 7, 0.1) !important;
+  --w3m-overlay-background-color: rgba(0, 0, 0, 0.85) !important;
+}
+
+/* Ensure AppKit buttons are compact and minimal */
+w3m-connect-button,
+w3m-account-button,
+w3m-network-button {
+  --w3m-button-size: 40px !important;
+  --w3m-button-border-radius: 12px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+/* Custom styling for wallet modal - BSC */
+w3m-modal::part(modal) {
+  backdrop-filter: blur(20px) !important;
+  background: rgba(15, 20, 25, 0.95) !important;
+  border: 1px solid rgba(255, 193, 7, 0.12) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 193, 7, 0.1) !important;
+}
+
+w3m-modal::part(overlay) {
+  background: rgba(0, 0, 0, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* Style wallet buttons in the modal */
+w3m-modal .w3m-wallet-button {
+  background: rgba(255, 193, 7, 0.05) !important;
+  border: 1px solid rgba(255, 193, 7, 0.15) !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+w3m-modal .w3m-wallet-button:hover {
+  background: rgba(255, 193, 7, 0.1) !important;
+  border-color: rgba(255, 193, 7, 0.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Ensure proper z-index */
+w3m-modal {
+  z-index: 9999 !important;
+}
+
+.nav-glass {
+  background-color: rgba(15, 20, 25, 0.95);
+}
+
+/* Ensure dropdowns appear above all content */
+header [style*="zIndex"] {
+  position: relative;
+}
+
+header [style*="zIndex"] > div[class*="absolute"] {
+  position: absolute !important;
+  z-index: 1001 !important;
+}
+
+/* Ensure main content doesn't interfere with dropdowns */
+main,
+section {
+  position: relative;
+  z-index: 1;
+}
+
+/* Logo color shifting animation - Default (footer/larger contexts) */
+.logo-color-shift {
+  animation: somnia-color-cycle 8s linear infinite;
+  width: 160px !important;
+  height: 160px !important;
+  min-width: 160px !important;
+  min-height: 160px !important;
+  max-width: 160px !important;
+  max-height: 160px !important;
+  object-fit: contain !important;
+  background: transparent !important;
+}
+
+/* Navbar logo - web standard size (40px height) - NO color animation */
+header .logo-color-shift.navbar-logo,
+header .navbar-logo,
+header .navbar-logo img,
+header a[href="/"]:has(.navbar-logo) > span,
+header a[href="/"]:has(.navbar-logo) span {
+  width: auto !important;
+  height: 40px !important;
+  min-width: auto !important;
+  min-height: 40px !important;
+  max-width: 200px !important;
+  max-height: 40px !important;
+  object-fit: contain !important;
+  background: transparent !important;
+  animation: none !important;
+  mix-blend-mode: lighten !important;
+  filter: none !important;
+}
+
+/* Next.js Image wrapper for logo - target parent container */
+a[href="/"]:has(.logo-color-shift),
+a[href="/"]:has(span[class*="logo"]) {
+  display: inline-flex !important;
+  width: auto !important;
+  height: auto !important;
+  background: transparent !important;
+}
+
+/* Ensure all logo images have transparent backgrounds */
+header img[alt*="Logo"],
+header img[alt*="Predinex"],
+footer img[alt*="Logo"],
+footer img[alt*="Predinex"],
+.navbar-logo,
+.navbar-logo img {
+  background: transparent !important;
+  mix-blend-mode: lighten !important;
+}
+
+a[href="/"]:has(.logo-color-shift) > span,
+a[href="/"]:has(.logo-color-shift) span {
+  width: 160px !important;
+  height: 160px !important;
+  min-width: 160px !important;
+  min-height: 160px !important;
+  max-width: 160px !important;
+  max-height: 160px !important;
+  display: inline-block !important;
+  background: transparent !important;
+}
+
+.logo-color-shift,
+.logo-color-shift img {
+  width: 160px !important;
+  height: 160px !important;
+  min-width: 160px !important;
+  min-height: 160px !important;
+  max-width: 160px !important;
+  max-height: 160px !important;
+  object-fit: contain !important;
+  background: transparent !important;
+}
+
+/* Footer logo - larger size with transparent background using blend mode */
+footer .logo-color-shift,
+footer .logo-color-shift img,
+footer a[href="/"]:has(.logo-color-shift) > span,
+footer a[href="/"]:has(.logo-color-shift) span,
+footer img[alt="Predinex"],
+footer a[href="/"] img {
+  width: auto !important;
+  height: 50px !important;
+  min-width: auto !important;
+  min-height: 50px !important;
+  max-width: 200px !important;
+  max-height: 50px !important;
+  background: transparent !important;
+  object-fit: contain !important;
+  mix-blend-mode: lighten !important;
+  animation: none !important;
+  filter: none !important;
+}
+
+@keyframes somnia-color-cycle {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  25% {
+    filter: hue-rotate(90deg);
+  }
+  50% {
+    filter: hue-rotate(180deg);
+  }
+  75% {
+    filter: hue-rotate(270deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+

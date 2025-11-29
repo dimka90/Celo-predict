@@ -1,0 +1,865 @@
+import { useState, useEffect, useCallback } from 'react';
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, usePublicClient } from 'wagmi';
+import { CONTRACTS, CONTRACT_ADDRESSES } from '@/contracts';
+import { formatUnits, parseUnits } from 'viem';
+import { encodeBytes32String } from 'ethers';
+import { convertPoolToReadableEnhanced } from '@/lib/bytes32-utils';
+import { useTransactionFeedback } from '@/components/TransactionFeedback';
+import { getTransactionOptions } from '@/lib/network-connection';
+
+export interface Pool {
+  id: bigint;
+  creator: string;
+  predictedOutcome: string;
+  odds: number;
+  creatorStake: bigint;
+  totalCreatorSideStake: bigint;
+  maxBettorStake: bigint;
+  totalBettorStake: bigint;
+  result: string;
+  marketId: string;
+  settled: boolean;
+  creatorSideWon: boolean;
+  eventStartTime: bigint;
+  eventEndTime: bigint;
+  bettingEndTime: bigint;
+  resultTimestamp: bigint;
+  arprixationDeadline: bigint;
+  league: string;
+  category: string;
+  region: string;
+  isPrivate: boolean;
+  maxBetPerUser: bigint;
+  usesPrix: boolean;
+  filledAbove60: boolean;
+  oracleType: number;
+}
+
+export interface OutcomeCondition {
+  marketId: string;
+  expectedOutcome: string;
+  resolved: boolean;
+  actualOutcome: string;
+}
+
+export interface ComboPool {
+  id: bigint;
+  creator: string;
+  creatorStake: bigint;
+  totalCreatorSideStake: bigint;
+  maxBettorStake: bigint;
+  totalBettorStake: bigint;
+  totalOdds: number;
+  combinedOdds: number;
+  settled: boolean;
+  creatorSideWon: boolean;
+  usesPrix: boolean;
+  eventStartTime: bigint;
+  eventEndTime: bigint;
+  latestEventEnd: bigint;
+  bettingEndTime: bigint;
+  resultTimestamp: bigint;
+  category: string;
+  maxBetPerUser: bigint;
+  conditions: OutcomeCondition[];
+}
+
+export interface UserBet {
+  poolId: bigint;
+  user: string;
+  amount: bigint;
+  prediction: boolean;
+  timestamp: bigint;
+  claimed: boolean;
+}
+
+export enum BoostTier {
+  NONE = 0,
+  BRONZE = 1,
+  SILVER = 2,
+  GOLD = 3
+}
+
+export function usePools() {
+  const { address } = useAccount();
+  const { writeContract, data: hash, isPending } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
+  const publicClient = usePublicClient();
+  const { showSuccess, showError, showPending, showConfirming } = useTransactionFeedback();
+
+  // State for tracking approval and bet transactions
+  const [approvalConfirmed, setApprovalConfirmed] = useState(false);
+  const [pendingBetData, setPendingBetData] = useState<{
+    poolId: number;
+    amount: string;
+    usePrix: boolean;
+    betType?: 'yes' | 'no';
+  } | null>(null);
+
+  // Track approval transaction confirmation
+  const { isSuccess: isApprovalSuccess } = useWaitForTransactionReceipt({ 
+    hash: hash 
+  });
+
+  // Track approval transaction states for transaction feedback
+  useEffect(() => {
+    if (isPending) {
+      console.log('🔄 Token approval pending - showing feedback');
+      showPending('Approval Pending', 'Please confirm the PRIX token approval in your wallet...');
+    }
+  }, [isPending, showPending]);
+
+  useEffect(() => {
+    if (isConfirming) {
+      console.log('⏳ Token approval confirming - showing feedback');
+      showConfirming('Approval Confirming', 'Your PRIX token approval is being processed on the blockchain...', hash);
+    }
+  }, [isConfirming, showConfirming, hash]);
+
+  // Track approval confirmation
+  useEffect(() => {
+    if (isApprovalSuccess && !approvalConfirmed) {
+      console.log('✅ Token approval successful - showing feedback with hash:', hash);
+      setApprovalConfirmed(true);
+      showSuccess('Approval Confirmed!', 'PRIX token approval confirmed! You can now place your bet.', hash);
+    }
+  }, [isApprovalSuccess, approvalConfirmed, showSuccess, hash]);
+
+  // PRIX token approval function
+  const approvePRIX = (spender: `0x${string}`, amount: bigint) => {
+    writeContract({
+      address: CONTRACT_ADDRESSES.PRIX_TOKEN,
+      abi: CONTRACTS.PRIX_TOKEN.abi,
+      functionName: 'approve',
+      args: [spender, amount],
+      ...getTransactionOptions(), // Use same gas settings as create pool
+    });
+  };
+
+  // Check PRIX allowance
+  const getPRIXAllowance = useCallback(async (owner: `0x${string}`, spender: `0x${string}`) => {
+    try {
+      if (!publicClient) {
+        console.error('❌ Public client not available');
+        return 0n;
+      }
+      const result = await publicClient.readContract({
+        address: CONTRACT_ADDRESSES.PRIX_TOKEN,
+        abi: CONTRACTS.PRIX_TOKEN.abi,
+        functionName: 'allowance',
+        args: [owner, spender],
+      });
+      return result as bigint;
+    } catch (error) {
+      console.error('❌ Error getting PRIX allowance:', error);
+      return 0n;
+    }
+  }, [publicClient]);
+
+  // Direct bet placement function
+  const placeBetDirect = useCallback(async (poolId: number, betAmount: bigint, usePrix: boolean) => {
+    showPending('Placing Bet', 'Please confirm the bet transaction in your wallet...');
+    
+    writeContract({
+      ...CONTRACTS.POOL_CORE,
+      functionName: 'placeBet',
+      args: [BigInt(poolId), betAmount],
+      value: usePrix ? 0n : betAmount,
+      ...getTransactionOptions(), // Use same gas settings as create pool
+    });
+  }, [writeContract, showPending]);
+
+  // Track approval errors
+  useEffect(() => {
+    if (hash && !isPending && !isConfirming && !isApprovalSuccess) {
+      console.log('❌ Token approval failed - showing error feedback');
+      showError('Approval Failed', 'PRIX token approval failed. Please try again.');
+    }
+  }, [hash, isPending, isConfirming, isApprovalSuccess, showError]);
+
+  // Direct liquidity addition function
+  const addLiquidityDirect = useCallback(async (poolId: number, liquidityAmount: bigint, usePrix: boolean) => {
+    showPending('Adding Liquidity', 'Please confirm the liquidity transaction in your wallet...');
+    
+    writeContract({
+      ...CONTRACTS.POOL_CORE,
+      functionName: 'addLiquidity',
+      args: [BigInt(poolId), liquidityAmount],
+      value: usePrix ? 0n : liquidityAmount,
+      ...getTransactionOptions(), // Use same gas settings as placeBet
+    });
+  }, [writeContract, showPending]);
+
+  // Handle approval confirmation and proceed with bet
+  useEffect(() => {
+    if (isApprovalSuccess && approvalConfirmed && pendingBetData && address) {
+      const proceedWithBet = async () => {
+        try {
+          console.log('✅ Approval confirmed, proceeding with bet:', pendingBetData);
+          
+          // Verify allowance before proceeding
+          const finalAllowance = await getPRIXAllowance(address, CONTRACT_ADDRESSES.POOL_CORE);
+          const betAmount = parseUnits(pendingBetData.amount, 18);
+          
+          if (finalAllowance < betAmount) {
+            showError('Insufficient Allowance', 'PRIX token allowance is still insufficient after approval.');
+            return;
+          }
+
+          // Place the bet or add liquidity based on bet type
+          if (pendingBetData.betType === 'no') {
+            await addLiquidityDirect(pendingBetData.poolId, betAmount, pendingBetData.usePrix);
+          } else {
+            await placeBetDirect(pendingBetData.poolId, betAmount, pendingBetData.usePrix);
+          }
+          
+          // Clear pending state immediately to prevent double execution
+          setPendingBetData(null);
+          setApprovalConfirmed(false);
+          
+        } catch (error) {
+          console.error('Error proceeding with bet after approval:', error);
+          showError('Bet Failed', 'Failed to place bet after approval confirmation.');
+          setPendingBetData(null);
+          setApprovalConfirmed(false);
+        }
+      };
+      
+      proceedWithBet();
+    }
+  }, [isApprovalSuccess, approvalConfirmed, pendingBetData, address, getPRIXAllowance, addLiquidityDirect, placeBetDirect, showError]);
+
+  // Track bet transaction confirmation
+  const { isSuccess: isBetSuccess } = useWaitForTransactionReceipt({ 
+    hash: hash 
+  });
+
+  // Track bet transaction states for transaction feedback
+  useEffect(() => {
+    if (isPending && !approvalConfirmed) {
+      console.log('🔄 Bet transaction pending - showing feedback');
+      showPending('Bet Pending', 'Please confirm the bet transaction in your wallet...');
+    }
+  }, [isPending, approvalConfirmed, showPending]);
+
+  useEffect(() => {
+    if (isConfirming && !approvalConfirmed) {
+      console.log('⏳ Bet transaction confirming - showing feedback');
+      showConfirming('Bet Confirming', 'Your bet is being processed on the blockchain...', hash);
+    }
+  }, [isConfirming, approvalConfirmed, showConfirming, hash]);
+
+  // Track bet confirmation
+  useEffect(() => {
+    if (isBetSuccess && !approvalConfirmed) {
+      console.log('✅ Bet transaction successful - showing feedback with hash:', hash);
+      showSuccess('Bet Placed!', 'Your bet has been placed successfully!', hash);
+    }
+  }, [isBetSuccess, approvalConfirmed, showSuccess, showConfirming, showPending, hash]);
+
+  // Track bet errors
+  useEffect(() => {
+    if (hash && !isPending && !isConfirming && !isBetSuccess && !approvalConfirmed) {
+      console.log('❌ Bet transaction failed - showing error feedback');
+      showError('Bet Failed', 'Your bet transaction failed. Please try again.');
+    }
+  }, [hash, isPending, isConfirming, isBetSuccess, approvalConfirmed, showError, showConfirming, showPending, showSuccess]);
+
+  // Read contract functions
+  const { data: poolCount, refetch: refetchPoolCount } = useReadContract({
+    ...CONTRACTS.POOL_CORE,
+    functionName: 'poolCount',
+  });
+
+  const { data: comboPoolCount, refetch: refetchComboPoolCount } = useReadContract({
+    ...CONTRACTS.POOL_CORE,
+    functionName: 'comboPoolCount',
+  });
+
+  const { data: minBetAmount } = useReadContract({
+    ...CONTRACTS.POOL_CORE,
+    functionName: 'minBetAmount',
+  });
+
+  const { data: minPoolStake } = useReadContract({
+    ...CONTRACTS.POOL_CORE,
+    functionName: 'minPoolStakeBNB',
+  });
+
+  const { data: creationFeeBNB } = useReadContract({
+    ...CONTRACTS.POOL_CORE,
+    functionName: 'creationFeeBNB',
+  });
+
+  const { data: creationFeePRIX } = useReadContract({
+    ...CONTRACTS.POOL_CORE,
+    functionName: 'creationFeePRIX',
+  });
+
+  // Get pool data - using publicClient for dynamic calls
+  type PoolResult = { pool: Pool | null; refetch: () => Promise<PoolResult> };
+  const getPool = async (poolId: number): Promise<PoolResult> => {
+    if (!publicClient || poolId < 0) return { pool: null, refetch: async () => getPool(poolId) };
+    
+    try {
+      const rawPool = await publicClient.readContract({
+        address: CONTRACTS.POOL_CORE.address,
+        abi: CONTRACTS.POOL_CORE.abi,
+        functionName: 'getPool',
+        args: [BigInt(poolId)],
+      });
+      
+      // Convert bytes32 fields to human-readable strings
+      const pool = rawPool && typeof rawPool === 'object' && rawPool !== null 
+        ? convertPoolToReadableEnhanced(rawPool as Record<string, unknown>) 
+        : null;
+      return { pool: pool as unknown as Pool, refetch: async () => getPool(poolId) };
+    } catch (error) {
+      console.error('Error fetching pool:', error);
+      return { pool: null, refetch: async () => getPool(poolId) };
+    }
+  };
+
+  // Get combo pool data - using publicClient for dynamic calls
+  type ComboPoolResult = { comboPool: ComboPool | null; refetch: () => Promise<ComboPoolResult> };
+  const getComboPool = async (comboPoolId: number): Promise<ComboPoolResult> => {
+    if (!publicClient || comboPoolId < 0) return { comboPool: null, refetch: async () => getComboPool(comboPoolId) };
+    
+    try {
+      const rawComboPool = await publicClient.readContract({
+        address: CONTRACTS.POOL_CORE.address,
+        abi: CONTRACTS.POOL_CORE.abi,
+        functionName: 'comboPools',
+        args: [BigInt(comboPoolId)],
+      });
+      
+      // Convert bytes32 fields to human-readable strings
+      const comboPool = rawComboPool && typeof rawComboPool === 'object' && rawComboPool !== null 
+        ? convertPoolToReadableEnhanced(rawComboPool as Record<string, unknown>) 
+        : null;
+      return { comboPool: comboPool as unknown as ComboPool, refetch: async () => getComboPool(comboPoolId) };
+    } catch (error) {
+      console.error('Error fetching combo pool:', error);
+      return { comboPool: null, refetch: async () => getComboPool(comboPoolId) };
+    }
+  };
+
+  // Check if user is whitelisted for private pool - using publicClient for dynamic calls
+  type WhitelistedResult = { whitelisted: boolean; refetch: () => Promise<WhitelistedResult> };
+  const isWhitelisted = async (poolId: number): Promise<WhitelistedResult> => {
+    if (!publicClient || !address || poolId < 0) return { whitelisted: false, refetch: async () => isWhitelisted(poolId) };
+    
+    try {
+      const whitelisted = await publicClient.readContract({
+        address: CONTRACTS.POOL_CORE.address,
+        abi: CONTRACTS.POOL_CORE.abi,
+        functionName: 'poolWhitelist',
+        args: [BigInt(poolId), address],
+      });
+      return { whitelisted: whitelisted as boolean, refetch: async () => isWhitelisted(poolId) };
+    } catch (error) {
+      console.error('Error checking whitelist:', error);
+      return { whitelisted: false, refetch: async () => isWhitelisted(poolId) };
+    }
+  };
+
+  // Get user's stake in a pool - using publicClient for dynamic calls
+  type StakeResult = { stake: bigint; refetch: () => Promise<StakeResult> };
+  const getUserStake = async (poolId: number): Promise<StakeResult> => {
+    if (!publicClient || !address || poolId < 0) return { stake: BigInt(0), refetch: async () => getUserStake(poolId) };
+    
+    try {
+      const stake = await publicClient.readContract({
+        address: CONTRACTS.POOL_CORE.address,
+        abi: CONTRACTS.POOL_CORE.abi,
+        functionName: 'bettorStakes',
+        args: [BigInt(poolId), address],
+      });
+      return { stake: stake as bigint, refetch: async () => getUserStake(poolId) };
+    } catch (error) {
+      console.error('Error fetching user stake:', error);
+      return { stake: BigInt(0), refetch: async () => getUserStake(poolId) };
+    }
+  };
+
+  // Get user's combo pool stake - using publicClient for dynamic calls
+  const getComboStake = async (comboPoolId: number): Promise<StakeResult> => {
+    if (!publicClient || !address || comboPoolId < 0) return { stake: BigInt(0), refetch: async () => getComboStake(comboPoolId) };
+    
+    try {
+      const stake = await publicClient.readContract({
+        address: CONTRACTS.POOL_CORE.address,
+        abi: CONTRACTS.POOL_CORE.abi,
+        functionName: 'comboBettorStakes',
+        args: [BigInt(comboPoolId), address],
+      });
+      return { stake: stake as bigint, refetch: async () => getComboStake(comboPoolId) };
+    } catch (error) {
+      console.error('Error fetching combo stake:', error);
+      return { stake: BigInt(0), refetch: async () => getComboStake(comboPoolId) };
+    }
+  };
+
+  // Get pool boost tier - using publicClient for dynamic calls
+  type BoostResult = { boostTier: number; refetch: () => Promise<BoostResult> };
+  const getPoolBoost = async (poolId: number): Promise<BoostResult> => {
+    if (!publicClient || poolId < 0) return { boostTier: 0, refetch: async () => getPoolBoost(poolId) };
+    
+    try {
+      const boostTier = await publicClient.readContract({
+        address: CONTRACTS.POOL_CORE.address,
+        abi: CONTRACTS.POOL_CORE.abi,
+        functionName: 'poolBoostTier',
+        args: [BigInt(poolId)],
+      });
+      return { boostTier: boostTier as number, refetch: async () => getPoolBoost(poolId) };
+    } catch (error) {
+      console.error('Error fetching pool boost:', error);
+      return { boostTier: 0, refetch: async () => getPoolBoost(poolId) };
+    }
+  };
+
+  // Write contract functions - Regular Pools
+  const createPool = async (
+    predictedOutcome: string,
+    odds: number,
+    creatorStake: string,
+    eventStartTime: Date,
+    eventEndTime: Date,
+    league: string,
+    category: string,
+    region: string,
+    isPrivate: boolean = false,
+    maxBetPerUser: string = "0",
+    usePrix: boolean = true,
+    oracleType: number = 0,
+    marketId: string = "",
+    marketType: number = 0
+  ) => {
+    const stakeWei = parseUnits(creatorStake, 18);
+    const maxBetWei = maxBetPerUser === "0" ? BigInt(0) : parseUnits(maxBetPerUser, 18);
+    
+    const args = [
+      encodeBytes32String(predictedOutcome), // Properly encode bytes32
+      odds, // Remove BigInt wrapper - should be number
+      stakeWei,
+      Math.floor(eventStartTime.getTime() / 1000), // Convert to number timestamp
+      Math.floor(eventEndTime.getTime() / 1000), // Convert to number timestamp
+      league,
+      category,
+      region,
+      isPrivate,
+      maxBetWei,
+      usePrix,
+      oracleType, // Remove BigInt wrapper - should be number
+      encodeBytes32String(marketId || ''), // Properly encode bytes32
+      marketType // MarketType enum value
+    ] as const;
+
+    if (usePrix) {
+      // For PRIX pools, the contract will handle the token transfer internally
+      // The user needs to approve the total amount (creation fee + stake) beforehand
+      writeContract({
+        ...CONTRACTS.POOL_CORE,
+        functionName: 'createPool',
+        args,
+        value: 0n, // No ETH/BNB value for PRIX pools
+        ...getTransactionOptions(), // Use same gas settings as other functions
+      });
+    } else {
+      // Calculate total required (creation fee + stake) for BNB pools
+      const totalRequired = (creationFeeBNB as bigint) + stakeWei;
+      writeContract({
+        ...CONTRACTS.POOL_CORE,
+        functionName: 'createPool',
+        args,
+        value: totalRequired,
+        ...getTransactionOptions(), // Use same gas settings as other functions
+      });
+    }
+  };
+
+  // Add liquidity function (for NO bets - supporting creator)
+  const addLiquidity = async (poolId: number, amount: string, usePrix: boolean = false) => {
+    try {
+      const liquidityAmount = parseUnits(amount, 18);
+
+      // Check minimum liquidity amount
+      if (minBetAmount && typeof minBetAmount === 'bigint' && liquidityAmount < minBetAmount) {
+        throw new Error(`Liquidity amount ${amount} BNB is below minimum amount ${formatUnits(minBetAmount, 18)} BNB`);
+      }
+
+      if (usePrix) {
+        // For PRIX pools, check and handle approval first
+        if (!address) {
+          throw new Error('Wallet not connected');
+        }
+
+        // Check current allowance
+        const currentAllowance = await getPRIXAllowance(address, CONTRACT_ADDRESSES.POOL_CORE);
+        
+        if (currentAllowance < liquidityAmount) {
+          // Need to approve more tokens - store pending liquidity data and trigger approval
+          setPendingBetData({ poolId, amount, usePrix, betType: 'no' });
+          setApprovalConfirmed(false);
+          
+          // Trigger approval transaction
+          approvePRIX(CONTRACT_ADDRESSES.POOL_CORE, liquidityAmount);
+          
+          // Return early - the approval confirmation will trigger the liquidity addition
+          return;
+        }
+
+        // Sufficient allowance - add liquidity directly
+        await addLiquidityDirect(poolId, liquidityAmount, usePrix);
+      } else {
+        // For BNB pools, send native token as value
+        await addLiquidityDirect(poolId, liquidityAmount, usePrix);
+      }
+    } catch (error) {
+      console.error('Error in addLiquidity:', error);
+      if (error instanceof Error) {
+        if (error.message.includes('Liquidity below minimum')) {
+          showError('Liquidity Too Small', 'Your liquidity amount is below the minimum required for this pool.');
+        } else if (error.message.includes('Pool settled')) {
+          showError('Pool Settled', 'This pool has already been settled and no longer accepts liquidity.');
+        } else if (error.message.includes('Betting period ended')) {
+          showError('Betting Closed', 'The betting period for this pool has ended.');
+        } else if (error.message.includes('Liquidity too large')) {
+          showError('Liquidity Too Large', 'Your liquidity amount exceeds the maximum allowed.');
+        } else if (error.message.includes('Too many LP providers')) {
+          showError('Pool Full', 'This pool has reached the maximum number of liquidity providers.');
+        } else if (error.message.includes('Not whitelisted')) {
+          showError('Not Whitelisted', 'You are not whitelisted for this private pool.');
+        } else if (error.message.includes('user rejected') || error.message.includes('User denied')) {
+          showError('Transaction Cancelled', 'The transaction was cancelled by user.');
+        } else if (error.message.includes('insufficient funds')) {
+          showError('Insufficient Funds', 'You do not have enough tokens for this liquidity addition.');
+        } else if (error.message.includes('PRIX transfer failed')) {
+          showError('Transfer Failed', 'PRIX token transfer failed. Please check your balance and try again.');
+        } else if (error.message.includes('gas')) {
+          showError('Gas Error', 'Transaction failed due to gas issues. Please try again.');
+        } else {
+          showError('Liquidity Addition Failed', error.message);
+        }
+      } else {
+        showError('Liquidity Addition Failed', 'An unexpected error occurred while adding liquidity.');
+      }
+      throw error;
+    }
+  };
+
+
+  const placeBet = async (poolId: number, amount: string, usePrix: boolean = false) => {
+    try {
+      const betAmount = parseUnits(amount, 18);
+
+      // Check minimum bet amount
+      if (minBetAmount && typeof minBetAmount === 'bigint' && betAmount < minBetAmount) {
+        throw new Error(`Bet amount ${amount} BNB is below minimum bet amount ${formatUnits(minBetAmount, 18)} BNB`);
+      }
+
+      if (usePrix) {
+        // For PRIX pools, check and handle approval first
+        if (!address) {
+          throw new Error('Wallet not connected');
+        }
+
+        // Check current allowance
+        const currentAllowance = await getPRIXAllowance(address, CONTRACT_ADDRESSES.POOL_CORE);
+        
+        if (currentAllowance < betAmount) {
+          // Need to approve more tokens - store pending bet data and trigger approval
+          setPendingBetData({ poolId, amount, usePrix, betType: 'yes' });
+          setApprovalConfirmed(false);
+          
+          // Trigger approval transaction
+          approvePRIX(CONTRACT_ADDRESSES.POOL_CORE, betAmount);
+          
+          // Return early - the approval confirmation will trigger the bet
+          return;
+        }
+
+        // Sufficient allowance - place bet directly
+        await placeBetDirect(poolId, betAmount, usePrix);
+      } else {
+        // For BNB pools, send native token as value
+        await placeBetDirect(poolId, betAmount, usePrix);
+      }
+    } catch (error) {
+      console.error('Error in placeBet:', error);
+      if (error instanceof Error) {
+        if (error.message.includes('Bet below minimum')) {
+          showError('Bet Too Small', 'Your bet amount is below the minimum required for this pool.');
+        } else if (error.message.includes('Pool settled')) {
+          showError('Pool Settled', 'This pool has already been settled and no longer accepts bets.');
+        } else if (error.message.includes('Betting period ended')) {
+          showError('Betting Closed', 'The betting period for this pool has ended.');
+        } else if (error.message.includes('Pool full')) {
+          showError('Pool Full', 'This pool has reached its maximum capacity.');
+        } else if (error.message.includes('Too many participants')) {
+          showError('Pool Full', 'This pool has reached the maximum number of participants.');
+        } else if (error.message.includes('Exceeds max bet per user')) {
+          showError('Bet Too Large', 'Your bet exceeds the maximum bet per user for this pool.');
+        } else if (error.message.includes('Not whitelisted')) {
+          showError('Not Whitelisted', 'You are not whitelisted for this private pool.');
+        } else if (error.message.includes('user rejected') || error.message.includes('User denied')) {
+          showError('Transaction Cancelled', 'The transaction was cancelled by user.');
+        } else if (error.message.includes('insufficient funds')) {
+          showError('Insufficient Funds', 'You do not have enough tokens for this bet.');
+        } else if (error.message.includes('PRIX transfer failed')) {
+          showError('Transfer Failed', 'PRIX token transfer failed. Please check your balance and try again.');
+        } else if (error.message.includes('gas')) {
+          showError('Gas Estimation Failed', 'Gas estimation failed. Please try again.');
+        } else if (error.message.includes('Internal JSON-RPC error')) {
+          showError('Network Error', 'Network error occurred. Please check your connection.');
+        } else {
+          showError('Bet Failed', `Failed to place bet: ${error.message}`);
+        }
+      } else {
+        showError('Unexpected Error', 'An unexpected error occurred while placing your bet.');
+      }
+      
+      throw error;
+    }
+  };
+
+  // Private pool management
+  const addToWhitelist = async (poolId: number, userAddress: string) => {
+    writeContract({
+      ...CONTRACTS.POOL_CORE,
+      functionName: 'addToWhitelist',
+      args: [BigInt(poolId), userAddress as `0x${string}`],
+      ...getTransactionOptions(),
+    });
+  };
+
+  const removeFromWhitelist = async (poolId: number, userAddress: string) => {
+    writeContract({
+      ...CONTRACTS.POOL_CORE,
+      functionName: 'removeFromWhitelist',
+      args: [BigInt(poolId), userAddress as `0x${string}`],
+      ...getTransactionOptions(),
+    });
+  };
+
+  // Pool boosting
+  const boostPool = async (poolId: number, tier: number) => {
+    // Get boost fees - these would need to be read from contract
+    const boostFees: { [key: number]: bigint } = {
+            1: parseUnits("10", 18), // Bronze - 10 BNB
+      2: parseUnits("25", 18), // Silver - 25 BNB
+      3: parseUnits("50", 18), // Gold - 50 BNB
+    };
+
+    writeContract({
+      ...CONTRACTS.POOL_CORE,
+      functionName: 'boostPool',
+      args: [BigInt(poolId), BigInt(tier)],
+      value: boostFees[tier] || BigInt(0),
+      ...getTransactionOptions(),
+    });
+  };
+
+  // Combo pool functions
+  const createComboPool = async (
+    conditions: OutcomeCondition[],
+    combinedOdds: number,
+    creatorStake: string,
+    earliestEventStart: Date,
+    latestEventEnd: Date,
+    category: string,
+    maxBetPerUser: string = "0",
+    usePrix: boolean = true
+  ) => {
+    const startTimestamp = BigInt(Math.floor(earliestEventStart.getTime() / 1000));
+    const endTimestamp = BigInt(Math.floor(latestEventEnd.getTime() / 1000));
+    const stakeWei = parseUnits(creatorStake, 18);
+    const maxBetWei = maxBetPerUser === "0" ? BigInt(0) : parseUnits(maxBetPerUser, 18);
+    
+    const args = [
+      conditions.map(c => ({
+        marketId: c.marketId,
+        expectedOutcome: c.expectedOutcome,
+        resolved: false,
+        actualOutcome: ""
+      })),
+      BigInt(combinedOdds),
+      stakeWei,
+      startTimestamp,
+      endTimestamp,
+      category,
+      maxBetWei,
+      usePrix
+    ] as const;
+
+    if (usePrix) {
+      writeContract({
+        ...CONTRACTS.POOL_CORE,
+        functionName: 'createComboPool',
+        args,
+        ...getTransactionOptions(),
+      });
+    } else {
+      const totalRequired = (creationFeeBNB as bigint) + stakeWei;
+      writeContract({
+        ...CONTRACTS.POOL_CORE,
+        functionName: 'createComboPool',
+        args,
+        value: totalRequired,
+        ...getTransactionOptions(),
+      });
+    }
+  };
+
+  const placeComboBet = async (comboPoolId: number, amount: string) => {
+    const betAmount = parseUnits(amount, 18);
+    
+    // Get combo pool data to check if it uses PRIX
+    const { comboPool } = await getComboPool(comboPoolId);
+    const usePrix = comboPool?.usesPrix ?? true;
+
+    if (usePrix) {
+      writeContract({
+        ...CONTRACTS.POOL_CORE,
+        functionName: 'placeComboBet',
+        args: [BigInt(comboPoolId), betAmount],
+        ...getTransactionOptions(),
+      });
+    } else {
+      writeContract({
+        ...CONTRACTS.POOL_CORE,
+        functionName: 'placeComboBet',
+        args: [BigInt(comboPoolId), betAmount],
+        value: betAmount,
+        ...getTransactionOptions(),
+      });
+    }
+  };
+
+  const claimWinnings = async (poolId: number) => {
+    writeContract({
+      ...CONTRACTS.POOL_CORE,
+      functionName: 'claim',
+      args: [BigInt(poolId)],
+      ...getTransactionOptions(),
+    });
+  };
+
+  const claimComboWinnings = async (comboPoolId: number) => {
+    writeContract({
+      ...CONTRACTS.POOL_CORE,
+      functionName: 'claimCombo',
+      args: [BigInt(comboPoolId)],
+      ...getTransactionOptions(),
+    });
+  };
+
+  // Helper functions
+  const formatAmount = (amount?: bigint): string => {
+    if (!amount) return '0';
+    return formatUnits(amount, 18);
+  };
+
+  const calculateOdds = (pool: Pool): { creator: number; bettor: number } => {
+    if (!pool || pool.totalCreatorSideStake === BigInt(0)) {
+      return { creator: 1, bettor: Number(pool?.odds || 100) / 100 };
+    }
+
+    const creatorOdds = Number(pool.odds) / 100;
+    const bettorOdds = creatorOdds;
+
+    return { creator: 1, bettor: bettorOdds };
+  };
+
+  const calculatePotentialWinnings = (
+    pool: Pool,
+    betAmount: string,
+    _prediction: boolean
+  ): string => {
+    const amount = parseFloat(betAmount);
+    const odds = calculateOdds(pool);
+    const potentialWinnings = amount * odds.bettor;
+    return potentialWinnings.toFixed(6);
+  };
+
+  const isPoolActive = (pool: Pool): boolean => {
+    if (!pool) return false;
+    const now = Math.floor(Date.now() / 1000);
+    return Number(pool.bettingEndTime) > now && !pool.settled;
+  };
+
+  const isPoolEnded = (pool: Pool): boolean => {
+    if (!pool) return false;
+    const now = Math.floor(Date.now() / 1000);
+    return Number(pool.bettingEndTime) <= now;
+  };
+
+  const getTimeRemaining = (pool: Pool): number => {
+    if (!pool) return 0;
+    const now = Math.floor(Date.now() / 1000);
+    const remaining = Number(pool.bettingEndTime) - now;
+    return Math.max(0, remaining * 1000); // Return in milliseconds
+  };
+
+  const isComboPoolActive = (comboPool: ComboPool): boolean => {
+    if (!comboPool) return false;
+    const now = Math.floor(Date.now() / 1000);
+    return Number(comboPool.bettingEndTime) > now && !comboPool.settled;
+  };
+
+  return {
+    // Contract data
+    poolCount: Number(poolCount || 0),
+    comboPoolCount: Number(comboPoolCount || 0),
+    minBetAmount: formatAmount(minBetAmount as bigint),
+    minPoolStake: formatAmount(minPoolStake as bigint),
+    creationFeeBNB: formatAmount(creationFeeBNB as bigint),
+    creationFeePRIX: formatAmount(creationFeePRIX as bigint),
+    
+    // Pool functions
+    getPool,
+    getComboPool,
+    isWhitelisted,
+    getUserStake,
+    getComboStake,
+    getPoolBoost,
+    
+    // Actions - Regular pools
+    createPool,
+    placeBet,
+    addLiquidity,
+    claimWinnings,
+    
+    // Actions - Private pools
+    addToWhitelist,
+    removeFromWhitelist,
+    
+    // Actions - Boosting
+    boostPool,
+    
+    // Actions - Combo pools
+    createComboPool,
+    placeComboBet,
+    claimComboWinnings,
+    
+    // Refresh functions
+    refetchPoolCount,
+    refetchComboPoolCount,
+    
+    // Transaction state
+    isPending,
+    isConfirming,
+    isConfirmed,
+    hash,
+    
+    // Helpers
+    formatAmount,
+    calculateOdds,
+    calculatePotentialWinnings,
+    isPoolActive,
+    isPoolEnded,
+    isComboPoolActive,
+    getTimeRemaining,
+  };
+}
