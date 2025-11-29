@@ -123,9 +123,9 @@ export default function ProfileCreationModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-3 sm:p-4">
-      <div className="glass-card w-full max-w-2xl max-h-[95vh] sm:max-h-[90vh] flex flex-col overflow-hidden">
+      <div className="w-full max-w-2xl max-h-[95vh] sm:max-h-[90vh] flex flex-col overflow-hidden rounded-lg border border-border-primary bg-bg-card backdrop-blur-lg">
         {/* Header with Close Button */}
-        <div className="flex items-start justify-between border-b border-border-primary bg-bg-card p-4 sm:p-6 flex-shrink-0">
+        <div className="flex items-start justify-between border-b border-border-primary bg-bg-card/80 p-4 sm:p-6 flex-shrink-0">
           <div className="flex-1 pr-4">
             <h2 className="text-xl sm:text-2xl font-bold text-text-secondary">Create Your Profile</h2>
             <p className="text-xs sm:text-sm text-text-muted mt-1">Welcome to Predinex! Let&apos;s set up your profile.</p>
@@ -312,7 +312,7 @@ export default function ProfileCreationModal() {
         </form>
 
         {/* Submit Buttons - Sticky Footer */}
-        <div className="border-t border-border-primary bg-bg-card p-4 sm:p-6 flex-shrink-0">
+        <div className="border-t border-border-primary bg-bg-card/80 p-4 sm:p-6 flex-shrink-0">
           <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
             <Button 
               type="button"
