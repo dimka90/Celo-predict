@@ -125,6 +125,9 @@ export default function ProfileCreationModal() {
     closeProfileModal()
   }
 
+  // Temporarily disabled - will fix after video
+  return null
+  
   if (!isProfileModalOpen || !address) return null
 
   return (
