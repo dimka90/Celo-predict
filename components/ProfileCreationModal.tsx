@@ -134,7 +134,7 @@ export default function ProfileCreationModal() {
         <div className="flex items-start justify-between border-b border-border-primary bg-bg-card/80 p-4 sm:p-6 flex-shrink-0">
           <div className="flex-1 pr-4">
             <h2 className="text-xl sm:text-2xl font-bold text-text-secondary">Create Your Profile</h2>
-            <p className="text-xs sm:text-sm text-text-muted mt-1">Welcome to Predinex! Let&apos;s set up your profile.</p>
+            <p className="text-xs sm:text-sm text-text-muted mt-1">Welcome to CeloPredict! Let&apos;s set up your profile.</p>
           </div>
           <button
             onClick={handleClose}
@@ -146,7 +146,7 @@ export default function ProfileCreationModal() {
         </div>
 
         {/* Scrollable Form Content */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
           {/* Basic Info */}
           <div className="space-y-4">
             <h3 className="text-base sm:text-lg font-semibold text-text-secondary flex items-center gap-2">
@@ -339,15 +339,13 @@ export default function ProfileCreationModal() {
                   Cancel
                 </Button>
               )}
-              <Button 
+              <button 
                 type="submit" 
-                variant="primary" 
-                loading={isSubmitting}
                 disabled={isSubmitting}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto px-6 py-2 sm:py-3 bg-primary text-bg-card font-semibold rounded-button hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                Create Profile
-              </Button>
+                {isSubmitting ? 'Creating...' : 'Create Profile'}
+              </button>
             </div>
           </div>
         </div>
