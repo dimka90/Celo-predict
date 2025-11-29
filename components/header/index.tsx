@@ -31,7 +31,7 @@ import NotificationBadge from "@/components/NotificationBadge";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [isPredictorOpen, setIsPredictorOpen] = useState<boolean>(false);
+  const [isAccountOpen, setIsAccountOpen] = useState<boolean>(false);
   const [isMarketsOpen, setIsMarketsOpen] = useState<boolean>(false);
   const [isWalletDropdownOpen, setIsWalletDropdownOpen] = useState<boolean>(false);
   const [{ y }] = useWindowScroll();
@@ -39,7 +39,7 @@ export default function Header() {
   const [isRender, setIsRender] = useState<boolean>(false);
   
   // Refs for dropdown positioning
-  const predictorButtonRef = useRef<HTMLButtonElement>(null);
+  const accountButtonRef = useRef<HTMLButtonElement>(null);
   const marketsButtonRef = useRef<HTMLButtonElement>(null);
   const walletButtonRef = useRef<HTMLButtonElement>(null);
   
@@ -89,8 +89,8 @@ export default function Header() {
   const handleClose = () => {
     setIsMenuOpen(false);
   };
-  const handlePredictorToggle = () => setIsPredictorOpen(!isPredictorOpen);
-  const handlePredictorClose = () => setIsPredictorOpen(false);
+  const handleAccountToggle = () => setIsAccountOpen(!isAccountOpen);
+  const handleAccountClose = () => setIsAccountOpen(false);
   const handleMarketsToggle = () => setIsMarketsOpen(!isMarketsOpen);
   const handleMarketsClose = () => setIsMarketsOpen(false);
   const handleWalletDropdownToggle = () => setIsWalletDropdownOpen(!isWalletDropdownOpen);
@@ -101,21 +101,21 @@ export default function Header() {
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = () => {
-      setIsPredictorOpen(false);
+      setIsAccountOpen(false);
       setIsMarketsOpen(false);
       setIsWalletDropdownOpen(false);
     };
 
-    if (isPredictorOpen || isMarketsOpen || isWalletDropdownOpen) {
+    if (isAccountOpen || isMarketsOpen || isWalletDropdownOpen) {
       document.addEventListener('click', handleClickOutside);
       return () => document.removeEventListener('click', handleClickOutside);
     }
-  }, [isPredictorOpen, isMarketsOpen, isWalletDropdownOpen]);
+  }, [isAccountOpen, isMarketsOpen, isWalletDropdownOpen]);
 
   // Close dropdowns on scroll
   useEffect(() => {
     const handleScroll = () => {
-      setIsPredictorOpen(false);
+      setIsAccountOpen(false);
       setIsMarketsOpen(false);
       setIsWalletDropdownOpen(false);
     };
@@ -147,6 +147,88 @@ export default function Header() {
 
               {/* Center - Navigation */}
               <nav className="flex items-center space-x-1 min-w-0 overflow-x-auto">
+                {/* Account Dropdown */}
+                <div className="relative" style={{ zIndex: 1000 }}>
+                  <motion.button
+                    ref={accountButtonRef}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAccountToggle();
+                    }}
+                    whileHover={{ scale: 1.01 }}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-button text-xs font-medium transition-all duration-200 ${
+                      isAccountOpen
+                        ? "bg-gradient-primary text-black shadow-button"
+                        : "text-text-secondary hover:text-text-primary hover:bg-bg-card"
+                    }`}
+                  >
+                    <UserIcon className="h-4 w-4" />
+                    Account
+                    <motion.div
+                      animate={{ rotate: isAccountOpen ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ChevronDownIcon className="h-4 w-4" />
+                    </motion.div>
+                  </motion.button>
+
+                  <AnimatePresence>
+                    {isAccountOpen && (() => {
+                      const position = getDropdownPosition(accountButtonRef);
+                      return (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                          transition={{ duration: 0.2, ease: "easeOut" }}
+                          className="fixed w-56 bg-[rgba(5,5,15,0.95)] backdrop-blur-xl border border-border-card/50 rounded-2xl shadow-2xl overflow-hidden"
+                          style={{ 
+                            zIndex: 1001,
+                            top: `${position.top}px`,
+                            left: `${position.left}px`
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="py-3 px-2">
+                            <Link
+                              href="/dashboard"
+                              onClick={handleAccountClose}
+                              className="flex items-center gap-3 px-3 py-2.5 mx-1 text-xs font-medium transition-all duration-200 rounded-xl text-text-secondary hover:text-text-primary hover:bg-[rgba(255,255,255,0.08)]"
+                            >
+                              <ChartBarIcon className="h-4 w-4" />
+                              Dashboard
+                            </Link>
+                            <Link
+                              href="/profile"
+                              onClick={handleAccountClose}
+                              className="flex items-center gap-3 px-3 py-2.5 mx-1 text-xs font-medium transition-all duration-200 rounded-xl text-text-secondary hover:text-text-primary hover:bg-[rgba(255,255,255,0.08)]"
+                            >
+                              <UserIcon className="h-4 w-4" />
+                              Profile
+                            </Link>
+                            <Link
+                              href="/leaderboard"
+                              onClick={handleAccountClose}
+                              className="flex items-center gap-3 px-3 py-2.5 mx-1 text-xs font-medium transition-all duration-200 rounded-xl text-text-secondary hover:text-text-primary hover:bg-[rgba(255,255,255,0.08)]"
+                            >
+                              <TrophyIcon className="h-4 w-4" />
+                              Leaderboard
+                            </Link>
+                            <Link
+                              href="/community"
+                              onClick={handleAccountClose}
+                              className="flex items-center gap-3 px-3 py-2.5 mx-1 text-xs font-medium transition-all duration-200 rounded-xl text-text-secondary hover:text-text-primary hover:bg-[rgba(255,255,255,0.08)]"
+                            >
+                              <UsersIcon className="h-4 w-4" />
+                              Community
+                            </Link>
+                          </div>
+                        </motion.div>
+                      );
+                    })()}
+                  </AnimatePresence>
+                </div>
+
                 {/* Markets Dropdown */}
                 <div className="relative" style={{ zIndex: 1000 }}>
                   <motion.button
