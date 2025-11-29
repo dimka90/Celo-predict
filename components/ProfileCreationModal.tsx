@@ -333,7 +333,7 @@ export default function ProfileCreationModal() {
               Skip for now
             </Button>
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              {address && hasProfile(address) && (
+              {address && hasProfile(address as string) && (
                 <Button 
                   variant="outline" 
                   onClick={handleClose}
