@@ -5,6 +5,7 @@ import { useAccount } from 'wagmi'
 import { useProfileStore } from '@/stores/useProfileStore'
 import { FiX, FiUser, FiEdit3, FiMapPin, FiGlobe, FiTwitter } from 'react-icons/fi'
 import { FaDiscord, FaTelegram } from 'react-icons/fa'
+import { toast } from 'react-hot-toast'
 import Button from '@/components/button'
 
 export default function ProfileCreationModal() {
@@ -83,7 +84,7 @@ export default function ProfileCreationModal() {
     
     try {
       // Save profile to store
-      await setProfile(address, {
+      setProfile(address, {
         username: formData.username.trim(),
         displayName: formData.displayName.trim(),
         bio: formData.bio.trim(),
@@ -94,9 +95,14 @@ export default function ProfileCreationModal() {
         telegram: formData.telegram.trim(),
       })
       
+      // Close modal immediately after saving
       closeProfileModal()
+      
+      // Show success message
+      toast.success('Profile created successfully!')
     } catch (error) {
       console.error('Error creating profile:', error)
+      toast.error('Failed to create profile')
     } finally {
       setIsSubmitting(false)
     }
