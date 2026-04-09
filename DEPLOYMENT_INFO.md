@@ -57,7 +57,19 @@ forge script scripts/DeploySimplePool.s.sol:DeploySimplePool --rpc-url https://f
 
 ---
 
-### 4. Post-Deployment Configuration
+---
+
+### 4. Verification (CRITICAL)
+Verification ensures your source code is visible to judges on the Explorer. I have prepared an automated script that uses the **Blockscout Verifier** (does not require an API key).
+
+Run the following command:
+```bash
+./scripts/verify-mainnet.sh
+```
+
+---
+
+### 5. Post-Deployment Configuration
 After deployment, update your `config/wagmi.ts` with the new addresses:
 - **Pool Core / Pool Creator**: Update `CONTRACT_ADDRESSES.POOL_CORE`
 - **PRIX Token**: Update `CONTRACT_ADDRESSES.PRIX_TOKEN`
