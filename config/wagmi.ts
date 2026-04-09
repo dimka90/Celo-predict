@@ -106,31 +106,31 @@ export const config = wagmiAdapter.wagmiConfig
 // Contract addresses for smart contract integration - CELO DEPLOYMENT
 // TODO: Deploy contracts to Celo and update these addresses
 export const CONTRACT_ADDRESSES = {
-  // Core Contracts (CELO - Update after deployment)
-  PRIX_TOKEN: (process.env.NEXT_PUBLIC_PRIX_TOKEN_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
-  POOL_CORE: (process.env.NEXT_PUBLIC_POOL_CORE_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
-  BOOST_SYSTEM: (process.env.NEXT_PUBLIC_BOOST_SYSTEM_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
-  COMBO_POOLS: (process.env.NEXT_PUBLIC_COMBO_POOLS_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
-  FACTORY: (process.env.NEXT_PUBLIC_FACTORY_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
+  // Core Contracts (CELO MAINNET DEPLOYED)
+  PRIX_TOKEN: (process.env.NEXT_PUBLIC_PRIX_TOKEN_ADDRESS || '0x36489A2cB87fB0ca8E9d0fE2350D082b90FDC68E') as `0x${string}`,
+  POOL_CORE: (process.env.NEXT_PUBLIC_POOL_CORE_ADDRESS || '0xE280fcf3E77ce302e78EB9a7CAb11D18bA4a4Da6') as `0x${string}`,
+  BOOST_SYSTEM: (process.env.NEXT_PUBLIC_BOOST_SYSTEM_ADDRESS || '0x8dFb57a5e43726645385c5E3E0C0a0505917eDA4') as `0x${string}`,
+  COMBO_POOLS: (process.env.NEXT_PUBLIC_COMBO_POOLS_ADDRESS || '0xea70f827C8d130BB5163ae251A598a96937cFD48') as `0x${string}`,
+  FACTORY: (process.env.NEXT_PUBLIC_FACTORY_ADDRESS || '0x9c06E3f414e8A84f2255efC5983d2e669A2A7572') as `0x${string}`,
 
   // Oracle Contracts
-  GUIDED_ORACLE: (process.env.NEXT_PUBLIC_GUIDED_ORACLE_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
-  OPTIMISTIC_ORACLE: (process.env.NEXT_PUBLIC_OPTIMISTIC_ORACLE_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
+  GUIDED_ORACLE: (process.env.NEXT_PUBLIC_GUIDED_ORACLE_ADDRESS || '0xE796e9Da17d83dDf0576A50c5AD9434eD1dA96F3') as `0x${string}`,
+  OPTIMISTIC_ORACLE: (process.env.NEXT_PUBLIC_OPTIMISTIC_ORACLE_ADDRESS || '0x2E58C87A0A0121a18EcC31eac34F3DCdBc25949e') as `0x${string}`,
 
   // System Contracts
-  REPUTATION_SYSTEM: (process.env.NEXT_PUBLIC_REPUTATION_SYSTEM_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
-  STAKING_CONTRACT: (process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
+  REPUTATION_SYSTEM: (process.env.NEXT_PUBLIC_REPUTATION_SYSTEM_ADDRESS || '0x7E6a2344f250d35EcB8EF5EBF2EEd7Cf73375999') as `0x${string}`,
+  STAKING_CONTRACT: (process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || '0x35B4CbEd92d47DacfB4001423a9D065054362496') as `0x${string}`,
 
   // Legacy support (for backward compatibility)
-  PREDINEX_POOL: (process.env.NEXT_PUBLIC_PREDINEX_POOL_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
-  PREDINEX_STAKING: (process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
+  PREDINEX_POOL: (process.env.NEXT_PUBLIC_PREDINEX_POOL_ADDRESS || '0xE280fcf3E77ce302e78EB9a7CAb11D18bA4a4Da6') as `0x${string}`,
+  PREDINEX_STAKING: (process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || '0x35B4CbEd92d47DacfB4001423a9D065054362496') as `0x${string}`,
 }
 
-// Network configuration for contract calls - CELO SEPOLIA
+// Network configuration for contract calls - CELO MAINNET
 export const NETWORK_CONFIG = {
-  chainId: 11142220, // Celo Sepolia Testnet
-  rpcUrl: process.env.NEXT_PUBLIC_RPC_URL || 'https://celo-sepolia.g.alchemy.com/v2/tjgIQUEkZoDp_7ACuP7nWxcwkNoWM6Je',
-  explorerUrl: 'https://sepolia.celoscan.io',
+  chainId: 42220, // Celo Mainnet
+  rpcUrl: process.env.NEXT_PUBLIC_CELO_RPC_URL || 'https://forno.celo.org',
+  explorerUrl: 'https://explorer.celo.org',
 }
 
 // Global gas settings - Optimized for Celo Network

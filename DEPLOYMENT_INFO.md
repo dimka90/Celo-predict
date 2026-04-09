@@ -1,19 +1,22 @@
-# CeloPredict Deployment Information
+## Celo Mainnet - Chain ID: 42220 (FINAL DEPLOYMENT)
 
-This document contains the verified contract addresses and deployment instructions for CeloPredict.
-
-## Celo Sepolia (Testnet) - Chain ID: 11142220
-
-These contracts are currently used for testing and are linked to the live staging environment.
+The protocol is now live on Celo Mainnet. Use these addresses for your "Proof of Ship" application and frontend configuration.
 
 | Contract | Address |
 | --- | --- |
-| **SimplePoolCreator** (Active) | `0x0be72f399156a07dafeb741c95d7998c16c0e4ba` |
-| **PredinexToken** (PRIX) | `0xba49b00e23ab11aabacc3ed5f6e9ea05bc58cd3e` |
-| **PredinexPoolCore** (Full) | `0x218d0e387b5f768ee681219be425befd56604dbe` |
-| **PredinexPoolFactory** | `0x5c2eaedb9f0cc9bce87360a38da0ae7e136dddd5` |
+| **PoolCore** (Main Logic) | `0xE280fcf3E77ce302e78EB9a7CAb11D18bA4a4Da6` |
+| **Factory** | `0x9c06E3f414e8A84f2255efC5983d2e669A2A7572` |
+| **PRIX Token** | `0x36489A2cB87fB0ca8E9d0fE2350D082b90FDC68E` |
+| **Reputation System** | `0x7E6a2344f250d35EcB8EF5EBF2EEd7Cf73375999` |
+| **Boost System** | `0x8dFb57a5e43726645385c5E3E0C0a0505917eDA4` |
+| **Staking Contract** | `0x35B4CbEd92d47DacfB4001423a9D065054362496` |
+| **Combo Pools** | `0xea70f827C8d130BB5163ae251A598a96937cFD48` |
+| **Guided Oracle** | `0xE796e9Da17d83dDf0576A50c5AD9434eD1dA96F3` |
+| **Optimistic Oracle** | `0x2E58C87A0A0121a18EcC31eac34F3DCdBc25949e` |
 
 ---
+
+## Celo Sepolia (Testnet) - Chain ID: 11142220
 
 ## Celo Mainnet - Chain ID: 42220
 
