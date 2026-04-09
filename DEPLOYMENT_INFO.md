@@ -30,26 +30,34 @@ export PRIVATE_KEY=your_private_key_here
 export CELOSCAN_API_KEY=your_api_key_here
 ```
 
-### 2. Deployment Command
-I have updated `foundry.toml` to use **Solidity 0.8.19** and **London EVM**, which ensures full compatibility with Celo Mainnet (avoids the PUSH0/EIP-3855 error).
+### 2. Wallet Funding
+The deployment script estimated a requirement of **~0.39 CELO** for the full ecosystem. 
+Your derived wallet address is: `0x86E74256beC87d5f542BC9214b708A9dE78e3998`
 
-Run the following command to deploy (it will skip verification for now to ensure a successful broadcast):
+Please ensure this address has at least **0.5 CELO** for a smooth deployment.
 
+---
+
+### 3. Deployment Options
+
+#### Option A: Full Ecosystem (Recommended)
+This deploys all core contracts (Token, PoolCore, Factory, etc.).
 ```bash
 forge script script/Deploy.s.sol:Deploy --rpc-url https://forno.celo.org --broadcast --legacy
 ```
 
-### 3. Verification (Optional but Recommended)
-Once the contracts are on-chain, you can verify them individually if you have a CeloScan key:
+#### Option B: Simple Deployment (Lower Gas)
+If you are low on CELO, you can deploy just the PRIX token and Simple Pool Creator.
 ```bash
-forge verify-contract <CONTRACT_ADDRESS> <CONTRACT_NAME> --chain 42220 --watch
+forge script scripts/DeploySimplePool.s.sol:DeploySimplePool --rpc-url https://forno.celo.org --broadcast --legacy
 ```
+
+---
 
 ### 4. Post-Deployment Configuration
 After deployment, update your `config/wagmi.ts` with the new addresses:
-- **Pool Core**: Update `CONTRACT_ADDRESSES.POOL_CORE`
+- **Pool Core / Pool Creator**: Update `CONTRACT_ADDRESSES.POOL_CORE`
 - **PRIX Token**: Update `CONTRACT_ADDRESSES.PRIX_TOKEN`
-- **Factory**: Update `CONTRACT_ADDRESSES.FACTORY`
 
 ---
 
