@@ -53,8 +53,8 @@ export const celoSepoliaNetwork: AppKitNetwork = {
 // Get project ID from environment
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '6a0514d82fb621e41aa6cad5473883a3'
 
-// Create the networks array - Only Celo Sepolia testnet for development
-const networks = [celoSepoliaNetwork] as [AppKitNetwork, ...AppKitNetwork[]]
+// Create the networks array - Include both Mainnet and Sepolia for production readiness
+const networks = [celoMainnetNetwork, celoSepoliaNetwork] as [AppKitNetwork, ...AppKitNetwork[]]
 
 // Create Wagmi Adapter
 export const wagmiAdapter = new WagmiAdapter({
@@ -112,15 +112,15 @@ export const CONTRACT_ADDRESSES = {
   BOOST_SYSTEM: (process.env.NEXT_PUBLIC_BOOST_SYSTEM_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
   COMBO_POOLS: (process.env.NEXT_PUBLIC_COMBO_POOLS_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
   FACTORY: (process.env.NEXT_PUBLIC_FACTORY_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
-  
+
   // Oracle Contracts
   GUIDED_ORACLE: (process.env.NEXT_PUBLIC_GUIDED_ORACLE_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
   OPTIMISTIC_ORACLE: (process.env.NEXT_PUBLIC_OPTIMISTIC_ORACLE_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
-  
+
   // System Contracts
   REPUTATION_SYSTEM: (process.env.NEXT_PUBLIC_REPUTATION_SYSTEM_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
   STAKING_CONTRACT: (process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
-  
+
   // Legacy support (for backward compatibility)
   PREDINEX_POOL: (process.env.NEXT_PUBLIC_PREDINEX_POOL_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,
   PREDINEX_STAKING: (process.env.NEXT_PUBLIC_STAKING_CONTRACT_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`,

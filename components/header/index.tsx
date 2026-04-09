@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import {
-  Bars3Icon, 
+  Bars3Icon,
   XMarkIcon,
   ChartBarIcon,
   UsersIcon,
@@ -37,12 +37,12 @@ export default function Header() {
   const [{ y }] = useWindowScroll();
   const segment = useSelectedLayoutSegment();
   const [isRender, setIsRender] = useState<boolean>(false);
-  
+
   // Refs for dropdown positioning
   const accountButtonRef = useRef<HTMLButtonElement>(null);
   const marketsButtonRef = useRef<HTMLButtonElement>(null);
   const walletButtonRef = useRef<HTMLButtonElement>(null);
-  
+
   // Get dropdown positions for fixed positioning
   const getDropdownPosition = (buttonRef: React.RefObject<HTMLButtonElement | null>) => {
     if (!buttonRef.current) return { top: 0, left: 0 };
@@ -52,17 +52,17 @@ export default function Header() {
       left: rect.left,
     };
   };
-  
+
   // Custom wallet connection hook
   const {
     isConnected,
     address,
-    isOnSomnia,
+    isOnCelo,
     isConnecting,
     error,
     connectWallet,
     disconnectWallet,
-    switchToSomnia,
+    switchToCelo,
   } = useWalletConnection();
   const { setCurrentProfile } = useProfileStore();
 
@@ -128,13 +128,12 @@ export default function Header() {
     return (
       <>
         <motion.header
-          animate={{ 
+          animate={{
             backgroundColor: isScrolled ? "rgba(10, 10, 26, 0.95)" : "rgba(10, 10, 26, 0.8)",
             backdropFilter: isScrolled ? "blur(20px)" : "blur(10px)",
           }}
-          className={`${
-            isScrolled ? "fixed shadow-card" : "relative"
-          } inset-x-0 top-0 z-[100] border-b border-border-card transition-all duration-300 nav-glass w-full`}
+          className={`${isScrolled ? "fixed shadow-card" : "relative"
+            } inset-x-0 top-0 z-[100] border-b border-border-card transition-all duration-300 nav-glass w-full`}
         >
           <div className="container-nav overflow-y-visible w-full">
             <div className="flex items-center justify-between py-1.5 min-w-0 gap-1 sm:gap-2 px-3 sm:px-4 lg:px-8 w-full">
@@ -156,11 +155,10 @@ export default function Header() {
                       handleAccountToggle();
                     }}
                     whileHover={{ scale: 1.01 }}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-button text-xs font-medium transition-all duration-200 ${
-                      isAccountOpen
+                    className={`flex items-center gap-2 px-4 py-2 rounded-button text-xs font-medium transition-all duration-200 ${isAccountOpen
                         ? "bg-gradient-primary text-black shadow-button"
                         : "text-text-secondary hover:text-text-primary hover:bg-bg-card"
-                    }`}
+                      }`}
                   >
                     <UserIcon className="h-4 w-4" />
                     Account
@@ -182,7 +180,7 @@ export default function Header() {
                           exit={{ opacity: 0, y: -10, scale: 0.95 }}
                           transition={{ duration: 0.2, ease: "easeOut" }}
                           className="fixed w-56 bg-[rgba(5,5,15,0.95)] backdrop-blur-xl border border-border-card/50 rounded-2xl shadow-2xl overflow-hidden"
-                          style={{ 
+                          style={{
                             zIndex: 1001,
                             top: `${position.top}px`,
                             left: `${position.left}px`
@@ -238,11 +236,10 @@ export default function Header() {
                       handleMarketsToggle();
                     }}
                     whileHover={{ scale: 1.01 }}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-button text-xs font-medium transition-all duration-200 ${
-                      segment?.startsWith('markets') || segment === 'markets'
+                    className={`flex items-center gap-2 px-4 py-2 rounded-button text-xs font-medium transition-all duration-200 ${segment?.startsWith('markets') || segment === 'markets'
                         ? "bg-gradient-primary text-black shadow-button"
                         : "text-text-secondary hover:text-text-primary hover:bg-bg-card"
-                    }`}
+                      }`}
                   >
                     <ChartBarIcon className="h-4 w-4" />
                     Markets
@@ -264,38 +261,36 @@ export default function Header() {
                           exit={{ opacity: 0, y: -10, scale: 0.95 }}
                           transition={{ duration: 0.2, ease: "easeOut" }}
                           className="fixed w-56 bg-[rgba(5,5,15,0.95)] backdrop-blur-xl border border-border-card/50 rounded-2xl shadow-2xl overflow-hidden"
-                          style={{ 
+                          style={{
                             zIndex: 1001,
                             top: `${position.top}px`,
                             left: `${position.left}px`
                           }}
                           onClick={(e) => e.stopPropagation()}
                         >
-                        <div className="py-3 px-2">
-                          {marketsLinks.map((link) => (
-                            <Link
-                              key={link.href}
-                              href={link.href}
-                              onClick={handleMarketsClose}
-                              className={`flex items-center gap-3 px-3 py-2.5 mx-1 text-xs font-medium transition-all duration-200 rounded-xl group ${
-                                segment === link.segment
-                                  ? "bg-gradient-primary text-black shadow-lg"
-                                  : "text-text-secondary hover:text-text-primary hover:bg-[rgba(255,255,255,0.08)]"
-                              }`}
-                            >
-                              <link.icon className={`h-4 w-4 transition-colors duration-200 ${
-                                segment === link.segment ? 'text-black' : 'text-primary group-hover:text-secondary'
-                              }`} />
-                              <span className="font-medium">{link.label}</span>
-                              {segment === link.segment && (
-                                <div className="ml-auto w-1.5 h-1.5 bg-black rounded-full" />
-                              )}
-                            </Link>
-                          ))}
-                        </div>
-                        
-                        {/* Bottom gradient accent */}
-                        <div className="h-0.5 bg-gradient-to-r from-primary via-secondary to-accent" />
+                          <div className="py-3 px-2">
+                            {marketsLinks.map((link) => (
+                              <Link
+                                key={link.href}
+                                href={link.href}
+                                onClick={handleMarketsClose}
+                                className={`flex items-center gap-3 px-3 py-2.5 mx-1 text-xs font-medium transition-all duration-200 rounded-xl group ${segment === link.segment
+                                    ? "bg-gradient-primary text-black shadow-lg"
+                                    : "text-text-secondary hover:text-text-primary hover:bg-[rgba(255,255,255,0.08)]"
+                                  }`}
+                              >
+                                <link.icon className={`h-4 w-4 transition-colors duration-200 ${segment === link.segment ? 'text-black' : 'text-primary group-hover:text-secondary'
+                                  }`} />
+                                <span className="font-medium">{link.label}</span>
+                                {segment === link.segment && (
+                                  <div className="ml-auto w-1.5 h-1.5 bg-black rounded-full" />
+                                )}
+                              </Link>
+                            ))}
+                          </div>
+
+                          {/* Bottom gradient accent */}
+                          <div className="h-0.5 bg-gradient-to-r from-primary via-secondary to-accent" />
                         </motion.div>
                       );
                     })()}
@@ -307,11 +302,10 @@ export default function Header() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-button text-xs font-medium transition-all duration-200 ${
-                      segment === link.segment
+                    className={`flex items-center gap-2 px-4 py-2 rounded-button text-xs font-medium transition-all duration-200 ${segment === link.segment
                         ? "bg-gradient-primary text-black shadow-button"
                         : "text-text-secondary hover:text-text-primary hover:bg-bg-card"
-                    }`}
+                      }`}
                   >
                     <link.icon className="h-4 w-4" />
                     {link.label}
@@ -327,7 +321,7 @@ export default function Header() {
                     <NotificationBadge />
                   </div>
                 )}
-                
+
                 {/* Error Display */}
                 {error && (
                   <div className="hidden sm:block">
@@ -350,7 +344,7 @@ export default function Header() {
                           whileHover={{ scale: 1.01 }}
                           className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-button bg-bg-card border border-border-input text-xs hover:bg-bg-card-hover transition-colors duration-200"
                         >
-                          <div className={`w-1.5 h-1.5 rounded-full ${isOnSomnia ? 'bg-green-500' : 'bg-orange-500'}`}></div>
+                          <div className={`w-1.5 h-1.5 rounded-full ${isOnCelo ? 'bg-green-500' : 'bg-orange-500'}`}></div>
                           <span className="text-text-secondary font-mono">
                             {address.slice(0, 6)}...{address.slice(-4)}
                           </span>
@@ -373,39 +367,39 @@ export default function Header() {
                                 exit={{ opacity: 0, y: -10, scale: 0.95 }}
                                 transition={{ duration: 0.2, ease: "easeOut" }}
                                 className="fixed w-48 bg-[rgba(5,5,15,0.95)] backdrop-blur-xl border border-border-card/50 rounded-2xl shadow-2xl overflow-hidden"
-                                style={{ 
+                                style={{
                                   zIndex: 1001,
                                   top: `${rect.bottom + 8}px`,
                                   right: `${window.innerWidth - rect.right}px`
                                 }}
                                 onClick={(e) => e.stopPropagation()}
                               >
-                              <div className="py-2 px-1">
-                                {!isOnSomnia && (
+                                <div className="py-2 px-1">
+                                  {!isOnCelo && (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        switchToCelo();
+                                        handleWalletDropdownClose();
+                                      }}
+                                      className="w-full flex items-center gap-2 px-3 py-2 mx-1 text-sm font-medium transition-all duration-200 rounded-xl text-orange-400 hover:text-orange-300 hover:bg-[rgba(255,255,255,0.08)]"
+                                    >
+                                      <span>Switch to Celo Sepolia</span>
+                                    </button>
+                                  )}
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      switchToSomnia();
+                                      disconnectWallet();
                                       handleWalletDropdownClose();
                                     }}
-                                    className="w-full flex items-center gap-2 px-3 py-2 mx-1 text-sm font-medium transition-all duration-200 rounded-xl text-orange-400 hover:text-orange-300 hover:bg-[rgba(255,255,255,0.08)]"
+                                    className="w-full flex items-center gap-2 px-3 py-2 mx-1 text-sm font-medium transition-all duration-200 rounded-xl text-text-secondary hover:text-text-primary hover:bg-[rgba(255,255,255,0.08)]"
                                   >
-                                    <span>Switch to BSC Testnet</span>
+                                    <span>Disconnect</span>
                                   </button>
-                                )}
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    disconnectWallet();
-                                    handleWalletDropdownClose();
-                                  }}
-                                  className="w-full flex items-center gap-2 px-3 py-2 mx-1 text-sm font-medium transition-all duration-200 rounded-xl text-text-secondary hover:text-text-primary hover:bg-[rgba(255,255,255,0.08)]"
-                                >
-                                  <span>Disconnect</span>
-                                </button>
-                              </div>
-                              <div className="h-0.5 bg-gradient-to-r from-primary via-secondary to-accent" />
-                            </motion.div>
+                                </div>
+                                <div className="h-0.5 bg-gradient-to-r from-primary via-secondary to-accent" />
+                              </motion.div>
                             );
                           })()}
                         </AnimatePresence>
@@ -494,11 +488,11 @@ export default function Header() {
               className="fixed inset-0 z-40 lg:hidden"
             >
               {/* Backdrop */}
-              <div 
+              <div
                 className="absolute inset-0 bg-bg-overlay backdrop-blur-modal"
                 onClick={handleClose}
               />
-              
+
               {/* Menu Panel */}
               <motion.div
                 initial={{ x: "100%" }}
@@ -513,13 +507,13 @@ export default function Header() {
                   {/* Header */}
                   <div className="flex items-center justify-between p-4 border-b border-border-card">
                     <Link href="/" className="flex items-center gap-2" onClick={handleClose}>
-                      <Image 
-                        src="/logo.svg" 
-                        alt="CeloPredict Logo" 
-                        width={40} 
-                        height={40} 
+                      <Image
+                        src="/logo.svg"
+                        alt="CeloPredict Logo"
+                        width={40}
+                        height={40}
                         className="navbar-logo"
-                        priority 
+                        priority
                         style={{ mixBlendMode: 'lighten', background: 'transparent' }}
                       />
                       <span className="text-lg font-bold bg-gradient-to-r from-green-400 to-yellow-400 bg-clip-text text-transparent">
@@ -539,11 +533,10 @@ export default function Header() {
                             key={link.href}
                             href={link.href}
                             onClick={handleClose}
-                            className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 min-w-0 ${
-                              segment === link.segment
+                            className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 min-w-0 ${segment === link.segment
                                 ? "bg-gradient-primary text-black"
                                 : "text-text-secondary hover:text-text-primary hover:bg-bg-card"
-                            }`}
+                              }`}
                           >
                             <link.icon className="h-4 w-4 flex-shrink-0" />
                             <span className="truncate">{link.label}</span>
@@ -561,11 +554,10 @@ export default function Header() {
                             key={link.href}
                             href={link.href}
                             onClick={handleClose}
-                            className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 min-w-0 ${
-                              segment === link.segment
+                            className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 min-w-0 ${segment === link.segment
                                 ? "bg-gradient-primary text-black"
                                 : "text-text-secondary hover:text-text-primary hover:bg-bg-card"
-                            }`}
+                              }`}
                           >
                             <link.icon className="h-4 w-4 flex-shrink-0" />
                             <span className="truncate">{link.label}</span>
@@ -583,11 +575,10 @@ export default function Header() {
                             key={link.href}
                             href={link.href}
                             onClick={handleClose}
-                            className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 min-w-0 ${
-                              segment === link.segment
+                            className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 min-w-0 ${segment === link.segment
                                 ? "bg-gradient-primary text-black"
                                 : "text-text-secondary hover:text-text-primary hover:bg-bg-card"
-                            }`}
+                              }`}
                           >
                             <link.icon className="h-4 w-4 flex-shrink-0" />
                             <span className="truncate">{link.label}</span>
@@ -603,7 +594,7 @@ export default function Header() {
                           Create Market
                         </Button>
                       </Link>
-                      
+
                       {isRender && (
                         isConnected && address ? (
                           <div className="space-y-2">
@@ -614,7 +605,7 @@ export default function Header() {
                               className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-bg-card border border-border-input text-sm hover:bg-bg-card-hover hover:border-border-input-hover transition-colors cursor-pointer group"
                               title="Click to copy address"
                             >
-                              <div className={`w-2 h-2 rounded-full flex-shrink-0 ${isOnSomnia ? 'bg-green-500' : 'bg-orange-500'}`}></div>
+                              <div className={`w-2 h-2 rounded-full flex-shrink-0 ${isOnCelo ? 'bg-green-500' : 'bg-orange-500'}`}></div>
                               <span className="text-text-secondary font-mono text-xs truncate flex-1">
                                 {address}
                               </span>
@@ -622,11 +613,11 @@ export default function Header() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                               </svg>
                             </button>
-                            {!isOnSomnia && (
+                            {!isOnCelo && (
                               <button
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  switchToSomnia();
+                                  switchToCelo();
                                 }}
                                 className="w-full px-3 py-2.5 rounded-lg text-sm font-medium text-orange-400 hover:text-orange-300 hover:bg-bg-card border border-orange-500 transition-colors"
                               >
@@ -676,7 +667,7 @@ export default function Header() {
                     <div className="text-center">
                       <p className="text-xs text-text-muted">
                         Powered by{" "}
-                        <span className="gradient-text font-medium">BNB Chain</span>
+                        <span className="gradient-text font-medium">Celo</span>
                       </p>
                     </div>
                   </div>
@@ -738,14 +729,14 @@ const marketsLinks = [
   },
   {
     label: "Trending",
-    href: "/markets/trending", 
+    href: "/markets/trending",
     segment: "trending",
     icon: ArrowTrendingUpIcon,
   },
   {
     label: "Private (Whitelist)",
     href: "/markets/private",
-    segment: "private", 
+    segment: "private",
     icon: LockClosedIcon,
   },
   {
