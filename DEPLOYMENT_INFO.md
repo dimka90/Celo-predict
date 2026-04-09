@@ -30,18 +30,17 @@ export PRIVATE_KEY=your_private_key_here
 export CELOSCAN_API_KEY=your_api_key_here
 ```
 
-### 2. Deployment & Verification Command
-Run the following command to deploy and and verify the ecosystem on Celo Mainnet:
+### 2. Deployment Command
+I have updated `foundry.toml` to use **Solidity 0.8.19** and **London EVM**, which ensures full compatibility with Celo Mainnet (avoids the PUSH0/EIP-3855 error).
+
+Run the following command to deploy (it will skip verification for now to ensure a successful broadcast):
 
 ```bash
-forge script script/Deploy.s.sol:Deploy --rpc-url https://forno.celo.org --broadcast --verify --legacy
+forge script script/Deploy.s.sol:Deploy --rpc-url https://forno.celo.org --broadcast --legacy
 ```
 
-**Why Verify?**
-Contracts verified on the Explorer are essential for the "Proof of Ship" application as they allow judges to audit the project's logic directly.
-
-### 3. Verification Troubleshooting
-If verification fails during deployment, you can verify manually:
+### 3. Verification (Optional but Recommended)
+Once the contracts are on-chain, you can verify them individually if you have a CeloScan key:
 ```bash
 forge verify-contract <CONTRACT_ADDRESS> <CONTRACT_NAME> --chain 42220 --watch
 ```
