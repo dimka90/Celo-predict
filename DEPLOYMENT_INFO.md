@@ -20,25 +20,37 @@ These contracts are currently used for testing and are linked to the live stagin
 To meet the **Proof of Ship** requirements, you must deploy these contracts to Celo Mainnet.
 
 ### 1. Preparation
-Ensure you have your private key exported as an environment variable:
+Ensure you have your environment variables set:
 ```bash
+# Your wallet private key (must have CELO for gas)
 export PRIVATE_KEY=your_private_key_here
+
+# Optional: For contract verification on CeloScan/Explorer
+# Get this from https://celoscan.io/
+export CELOSCAN_API_KEY=your_api_key_here
 ```
 
-### 2. Deployment Command
-Run the following command to deploy the full ecosystem to Celo Mainnet:
+### 2. Deployment & Verification Command
+Run the following command to deploy and and verify the ecosystem on Celo Mainnet:
 
 ```bash
-forge script script/Deploy.s.sol:Deploy --rpc-url https://forno.celo.org --broadcast --legacy
+forge script script/Deploy.s.sol:Deploy --rpc-url https://forno.celo.org --broadcast --verify --legacy
 ```
 
-*Note: The `--legacy` flag is often required for Celo to handle gas properly if using older Foundry versions.*
+**Why Verify?**
+Contracts verified on the Explorer are essential for the "Proof of Ship" application as they allow judges to audit the project's logic directly.
 
-### 3. Verification
-After deployment, update your `.env` or `config/wagmi.ts` with the new addresses:
-- `NEXT_PUBLIC_POOL_CORE_ADDRESS`
-- `NEXT_PUBLIC_PRIX_TOKEN_ADDRESS`
-- `NEXT_PUBLIC_FACTORY_ADDRESS`
+### 3. Verification Troubleshooting
+If verification fails during deployment, you can verify manually:
+```bash
+forge verify-contract <CONTRACT_ADDRESS> <CONTRACT_NAME> --chain 42220 --watch
+```
+
+### 4. Post-Deployment Configuration
+After deployment, update your `config/wagmi.ts` with the new addresses:
+- **Pool Core**: Update `CONTRACT_ADDRESSES.POOL_CORE`
+- **PRIX Token**: Update `CONTRACT_ADDRESSES.PRIX_TOKEN`
+- **Factory**: Update `CONTRACT_ADDRESSES.FACTORY`
 
 ---
 
