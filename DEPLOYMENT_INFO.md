@@ -61,6 +61,14 @@ After deployment, update your `config/wagmi.ts` with the new addresses:
 
 ---
 
+### 5. Interaction Gas Costs
+Once deployed, interacting with the contracts (e.g., creating pools, placing bets) is **extremely cheap** on Celo:
+- **Deployment**: ~0.39 CELO (One-time cost to create contracts)
+- **Interaction (e.g., Create Pool)**: ~0.02 - 0.03 CELO (Approx. $0.02 USD)
+- **Betting/Settlement**: < 0.01 CELO (Approx. $0.01 USD)
+
+Celo's low fees make it ideal for high-frequency prediction markets and automated scripts.
+
 ## MiniPay Integration Status
 The app is **MiniPay Compatible**. It includes:
 1.  **Detection**: Automatically detects MiniPay browser/provider.
