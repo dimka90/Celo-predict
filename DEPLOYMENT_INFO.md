@@ -41,21 +41,26 @@ Please ensure this address has at least **0.5 CELO** for a smooth deployment.
 
 ---
 
+---
+
 ### 3. Deployment Options
 
-#### Option A: Full Ecosystem (Recommended)
-This deploys all core contracts (Token, PoolCore, Factory, etc.).
+#### Option A: Unified Deployment & Verification (Recommended)
+This command deploys and verifies all contracts in one step on Celoscan, using your preferred format:
+
+```bash
+forge script script/Deploy.s.sol:Deploy --rpc-url https://forno.celo.org --private-key $PRIVATE_KEY --broadcast --verify --verifier etherscan --etherscan-api-key $CELOSCAN_API_KEY --verifier-url "https://api.celoscan.io/api" -vvvv --via-ir --legacy
+```
+
+#### Option B: Full Ecosystem (Broadcast Only)
 ```bash
 forge script script/Deploy.s.sol:Deploy --rpc-url https://forno.celo.org --broadcast --legacy
 ```
 
-#### Option B: Simple Deployment (Lower Gas)
-If you are low on CELO, you can deploy just the PRIX token and Simple Pool Creator.
+#### Option C: Simple Deployment (Lower Gas)
 ```bash
 forge script scripts/DeploySimplePool.s.sol:DeploySimplePool --rpc-url https://forno.celo.org --broadcast --legacy
 ```
-
----
 
 ---
 
