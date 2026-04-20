@@ -43,3 +43,4 @@ next-env.d.ts
 # inactive files
 inactive/
 node_modules/
+army-wallets.json
