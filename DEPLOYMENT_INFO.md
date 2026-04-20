@@ -64,13 +64,21 @@ forge script scripts/DeploySimplePool.s.sol:DeploySimplePool --rpc-url https://f
 
 ---
 
-### 4. Verification (CRITICAL)
-Verification ensures your source code is visible to judges on the Explorer. I have prepared an automated script that uses the **Blockscout Verifier** (does not require an API key).
+### 4. Verification (Multi-Method)
+Verification on Celo can be tricky due to API migrations. I have updated the script to try **two methods** for every contract:
+1.  **Sourcify**: A decentralized verification system (very reliable on Celo).
+2.  **Etherscan V2**: Using the new unified V2 endpoint with your API key.
 
-Run the following command:
+**Run the multi-method script:**
 ```bash
 ./scripts/verify-mainnet.sh
 ```
+
+This ensures that even if one service is slow, your source code gets published to the other.
+
+This script handles all 9 contracts using the correct V2 parameters and your `$ETHERSCAN_API_KEY`.
+
+This script handles all 9 contracts, including their respective constructor arguments, using the official `--chain-id 42220` and `--etherscan-api-key` flags.
 
 ---
 

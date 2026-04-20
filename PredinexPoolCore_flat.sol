@@ -1559,4 +1559,3 @@ contract PredinexPoolCore is Ownable, ReentrancyGuard {
     // - getUserPoolStake() -> backend syncs via event-driven-bet-sync
     // Removed getBatchRefundInfo - calculate directly if needed
 }
-
