@@ -1,0 +1,15 @@
+{
+  "name": "Predinex-Oracle-Agent-Alpha",
+  "description": "Autonomous AI Agent specialized in cross-chain prediction market analysis and high-frequency execution on Celo.",
+  "version": "1.0.0",
+  "author": "Predinex Protocol",
+  "capabilities": [
+    "Market Sentiment Analysis",
+    "On-chain Prediction Execution",
+    "Autonomous Liquidity Management",
+    "DAU Metric Optimization"
+  ],
+  "wallet": "0x86E74256beC87d5f542BC9214b708A9dE78e3998",
+  "protocol": "ERC-8004",
+  "self_agent_id_status": "PENDING_REGISTRATION"
+}
