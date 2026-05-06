@@ -30,11 +30,11 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://predinex.vercel.app'),
+  metadataBase: new URL('https://celo-predict-nine.vercel.app'),
   openGraph: {
     title: "CeloPredict - Decentralized Prediction Markets",
     description: "Trade on real-world outcomes with transparent, blockchain-powered markets on Celo with MiniPay",
-    url: "https://celopredict.vercel.app",
+    url: "https://celo-predict-nine.vercel.app",
     siteName: "CeloPredict",
     images: [
       {
