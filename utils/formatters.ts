@@ -63,16 +63,16 @@ export function formatTokenAmount(
 }
 
 /**
- * Format BNB (BSC Testnet) amount
+ * Format CELO amount
  * @param value - Value in wei
  * @param maxDecimals - Maximum decimal places (default 2)
- * @returns Formatted string with "BNB" suffix (e.g., "1,234.56 BNB")
+ * @returns Formatted string with "CELO" suffix (e.g., "1,234.56 CELO")
  */
-export function formatBNB(
+export function formatCELO(
   value: bigint | string | number | undefined | null,
   maxDecimals: number = 2
 ): string {
-  return `${formatTokenAmount(value, 18, maxDecimals)} BNB`;
+  return `${formatTokenAmount(value, 18, maxDecimals)} CELO`;
 }
 
 /**
@@ -89,9 +89,7 @@ export function formatPRIX(
 }
 
 /**
- * Format compact number with K, M, B suffixes
- * @param value - Number to format
- * @returns Compact string (e.g., "1.2K", "5.4M", "2.1B")
+ * Format compact number with K, M, B suffixes (e.g., "1.2K", "5.4M", "2.1B")
  */
 export function formatCompactNumber(value: number | string | undefined | null): string {
   if (value === undefined || value === null) return '0';
@@ -112,10 +110,7 @@ export function formatCompactNumber(value: number | string | undefined | null): 
 }
 
 /**
- * Format percentage
- * @param value - Percentage value (0-100)
- * @param decimals - Decimal places (default 1)
- * @returns Formatted string with "%" suffix (e.g., "45.2%")
+ * Format percentage (e.g., "45.2%")
  */
 export function formatPercentage(
   value: number | string | undefined | null,
@@ -131,11 +126,7 @@ export function formatPercentage(
 }
 
 /**
- * Format win rate percentage
- * @param wins - Number of wins
- * @param total - Total number of bets
- * @param decimals - Decimal places (default 1)
- * @returns Formatted win rate string (e.g., "65.5%")
+ * Format win rate percentage based on wins vs total.
  */
 export function formatWinRate(
   wins: number,
@@ -147,14 +138,12 @@ export function formatWinRate(
 }
 
 /**
- * Format profit/loss with sign
- * @param value - P&L value
- * @param token - Token symbol (default "BNB")
- * @returns Formatted string with sign (e.g., "+1,234.56 BNB", "-56.78 BNB")
+ * Format profit/loss with sign and token symbol.
+ * @param token - Token symbol (default "CELO")
  */
 export function formatProfitLoss(
   value: bigint | string | number | undefined | null,
-  token: string = 'BNB'
+  token: string = 'CELO'
 ): string {
   if (value === undefined || value === null) return `0 ${token}`;
   
