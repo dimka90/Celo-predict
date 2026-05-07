@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useAccount } from "wagmi";
 import { useQuery } from "@tanstack/react-query";
-import { formatBNB, formatShortDate } from "@/utils/formatters";
+import { formatCELO, formatShortDate } from "@/utils/formatters";
 import {
   SparklesIcon,
   MagnifyingGlassIcon,
@@ -222,14 +222,14 @@ export default function CreatedPredictionsPage() {
                   <div className="text-right">
                     <div className="text-sm text-text-muted mb-1">Total Volume</div>
                     <div className="font-medium text-text-primary">
-                      {formatBNB((parseFloat(pool.total_bettor_stake || '0') + parseFloat(pool.creator_stake || '0')).toString())}
+                      {formatCELO((parseFloat(pool.total_bettor_stake || '0') + parseFloat(pool.creator_stake || '0')).toString())}
                     </div>
                   </div>
                   
                   <div className="text-right">
                     <div className="text-sm text-text-muted mb-1">Your Liquidity</div>
                     <div className="font-medium text-cyan-400">
-                      {formatBNB(pool.creator_stake || '0')}
+                      {formatCELO(pool.creator_stake || '0')}
                     </div>
                   </div>
                   

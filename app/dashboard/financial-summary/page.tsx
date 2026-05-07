@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useAccount } from "wagmi";
 import { usePortfolio } from "@/hooks/usePortfolio";
-import { formatBNB, formatPRIX, formatPercentage, formatShortDate } from "@/utils/formatters";
+import { formatCELO, formatPRIX, formatPercentage, formatShortDate } from "@/utils/formatters";
 import {
   WalletIcon,
   TrophyIcon,
@@ -157,7 +157,7 @@ export default function Page() {
         {[
           {
             title: "Total Value",
-            value: formatBNB(summary.currentValue),
+            value: formatCELO(summary.currentValue),
             change: roiPercentage >= 0 ? `+${roiPercentage.toFixed(1)}%` : `${roiPercentage.toFixed(1)}%`,
             icon: <WalletIcon className="h-6 w-6" />,
             color: "text-blue-400",
@@ -167,7 +167,7 @@ export default function Page() {
           },
           {
             title: "Unrealized P&L",
-            value: formatBNB(summary.unrealizedPL),
+            value: formatCELO(summary.unrealizedPL),
             change: formatPercentage(roiPercentage),
             icon: <ChartBarIcon className="h-6 w-6" />,
             color: summary.unrealizedPL >= 0 ? "text-green-400" : "text-red-400",
@@ -314,7 +314,7 @@ export default function Page() {
         <div className="space-y-4">
           {filteredPortfolio.map((position, index) => {
             const theme = getCardTheme(position.category);
-            const formatAmount = position.token === 'PRIX' ? formatPRIX : formatBNB;
+            const formatAmount = position.token === 'PRIX' ? formatPRIX : formatCELO;
             const unrealizedPL = parseFloat(position.unrealizedPL);
             
             return (
