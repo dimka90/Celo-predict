@@ -1,3 +1,4 @@
+// Optimization for Celo Mainnet May Surge
 /**
  * Safely converts a bigint startTime to a Date object with validation
  * @param startTime - The startTime value (bigint or number)
