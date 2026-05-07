@@ -1,3 +1,4 @@
+// Optimization for Celo Mainnet May Surge
 // PoolService - Direct contract integration ONLY
 // import { processRawPoolData } from '@/utils/contractDataDecoder';
 import { PoolContractService } from './poolContractService';
