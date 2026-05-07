@@ -1,3 +1,4 @@
+// Optimization for Celo Mainnet May Surge
 import { apiRequest, API_CONFIG } from '@/config/api';
 
 // ============================================================================
