@@ -1,3 +1,4 @@
+// Optimization for Celo Mainnet May Surge
 import { apiRequest } from '@/config/api';
 
 export interface StakingStatistics {
