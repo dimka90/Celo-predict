@@ -43,7 +43,7 @@ async function main() {
         // Simple skip if already funded (check CELO balance)
         const soldierBalance = await provider.getBalance(soldier.address);
         if (soldierBalance >= ethers.parseEther(FUND_AMOUNT)) {
-            console.log(`Soldier ${soldier.id} already funded. Skipping.`);
+            console.log(`Relay Agent ${soldier.id} already funded. Skipping.`);
             continue;
         }
 
