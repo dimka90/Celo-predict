@@ -202,7 +202,7 @@ export class PoolContractService {
       
       let totalVolume = 0;
       let prixVolume = 0;
-      let bnbVolume = 0;
+      let celoVolume = 0;
       let activeMarkets = 0;
       let participants = 0;
       
@@ -216,7 +216,7 @@ export class PoolContractService {
         if (creatorStake >= 1000) {
           prixVolume += poolVolume;
         } else {
-          bnbVolume += poolVolume;
+          celoVolume += poolVolume;
         }
         
         if (!pool.settled) {
@@ -229,7 +229,7 @@ export class PoolContractService {
       return {
         totalVolume: totalVolume.toString(),
         prixVolume: prixVolume.toString(),
-        bnbVolume: bnbVolume.toString(),
+        celoVolume: celoVolume.toString(),
         activeMarkets,
         participants,
         totalPools,
@@ -242,7 +242,7 @@ export class PoolContractService {
       return {
         totalVolume: "0",
         prixVolume: "0",
-        bnbVolume: "0",
+        celoVolume: "0",
         activeMarkets: 0,
         participants: 0,
         totalPools: 0,

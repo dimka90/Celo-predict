@@ -45,7 +45,7 @@ export interface Pool {
 export interface PoolStats {
   totalVolume: string;
   prixVolume?: string;
-  bnbVolume?: string;
+  celoVolume?: string;
   activeMarkets: number;
   participants: number;
   totalPools: number;
@@ -250,7 +250,7 @@ export class PoolService {
       return {
         totalVolume: totalVolume.toString(),
         prixVolume: pools.filter(p => p.usesPrix).reduce((sum, pool) => sum + (parseFloat(pool.creatorStake) || 0), 0).toString(),
-        bnbVolume: pools.filter(p => !p.usesPrix).reduce((sum, pool) => sum + (parseFloat(pool.creatorStake) || 0), 0).toString(),
+        celoVolume: pools.filter(p => !p.usesPrix).reduce((sum, pool) => sum + (parseFloat(pool.creatorStake) || 0), 0).toString(),
         activeMarkets: activePools,
         participants: pools.length, // Simplified
         totalPools: poolCount,
@@ -263,7 +263,7 @@ export class PoolService {
       return {
         totalVolume: "0",
         prixVolume: "0",
-        bnbVolume: "0",
+        celoVolume: "0",
         activeMarkets: 0,
         participants: 0,
         totalPools: 0,

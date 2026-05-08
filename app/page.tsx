@@ -31,7 +31,7 @@ export default function HomePage() {
   const [stats, setStats] = useState({
     totalVolume: "0",
     prixVolume: "0", 
-    bnbVolume: "0",
+    celoVolume: "0",
     activePools: 0,
     participants: 0,
     totalPools: 0,
@@ -150,7 +150,7 @@ export default function HomePage() {
       setStats({
         totalVolume: "2840000",
         prixVolume: "1420000",
-        bnbVolume: "1420000", 
+        celoVolume: "1420000", 
         activePools: 156,
         participants: 8924,
         totalPools: 247,
@@ -410,6 +410,22 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
+            {/* MiniPay Optimized Badge */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6 sm:mb-8"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                MiniPay Optimized
+              </span>
+            </motion.div>
+
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
               <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-amber-400 bg-clip-text text-transparent">
                 Predict the Future
