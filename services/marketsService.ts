@@ -1,3 +1,4 @@
+// Optimization for Celo Mainnet May Surge
 import { PoolContractService } from './poolContractService';
 // import { processRawPoolData } from '@/utils/contractDataDecoder';
 

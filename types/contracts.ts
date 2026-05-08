@@ -148,7 +148,20 @@ export interface PoolFormData {
   boostTier?: BoostTier;
 }
 
-// Validation helpers
+// Pool status interface for front-end tracking
+export interface PoolStatus {
+  id: string;
+  creator: string;
+  state: 'Open' | 'Closed' | 'Settled' | 'Cancelled';
+  totalLiquidity: bigint;
+  participantCount: number;
+  winner: string | null;
+}
+
+/**
+ * Validation helpers for creating new prediction pools.
+ * Ensures all required fields are present and time ranges are valid.
+ */
 export function validatePoolData(data: PoolFormData): string[] {
   const errors: string[] = [];
   
@@ -212,7 +225,10 @@ export function validatePoolData(data: PoolFormData): string[] {
   return errors;
 }
 
-// Convert form data to contract data
+/**
+ * Converts raw form data from the UI into the structured bigint format
+ * required by the Celo smart contracts.
+ */
 export function convertFormToContractData(formData: PoolFormData): PoolCreationData {
   // Validate odds is set and valid
   const oddsValue = parseFloat(formData.odds);
@@ -243,17 +259,17 @@ export function convertFormToContractData(formData: PoolFormData): PoolCreationD
   };
 }
 
-// Generate market ID for football matches using keccak256
+/**
+ * Generates a deterministic market ID for football matches.
+ */
 export function generateFootballMarketId(homeTeam: string, awayTeam: string, league: string): string {
-  // Use a deterministic string format that matches the backend
   const matchString = `${homeTeam}_${awayTeam}_${league}`;
-  
-  // For now, return a simple format that can be converted to keccak256 in the hook
-  // The actual keccak256 conversion will happen in the contract interaction
   return matchString;
 }
 
-// Generate title for football matches
+/**
+ * Creates a human-readable title for football prediction markets.
+ */
 export function generateFootballTitle(homeTeam: string, awayTeam: string, marketType: MarketType): string {
   const marketTypeLabel = MARKET_TYPE_LABELS[marketType];
   return `${homeTeam} vs ${awayTeam} - ${marketTypeLabel}`;

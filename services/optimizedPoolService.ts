@@ -107,7 +107,7 @@ export interface PoolAnalytics {
   settledPools: number;
   totalVolume: string;
   prixVolume: string;
-  bnbVolume: string;
+  celoVolume: string;
   participants: number;
   boostedPools: number;
   trendingPools: number;
@@ -256,7 +256,7 @@ class OptimizedPoolService {
       settledPools: 0,
       totalVolume: '0',
       prixVolume: '0',
-      bnbVolume: '0',
+      celoVolume: '0',
       participants: 0,
       boostedPools: 0,
       trendingPools: 0

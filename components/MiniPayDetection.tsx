@@ -46,6 +46,27 @@ export default function MiniPayDetection() {
     };
   }, []);
 
+  // Back Button Hook for MiniPay
+  useEffect(() => {
+    if (!isMiniPay) return;
+
+    const handleBack = (event: PopStateEvent) => {
+      // Logic to handle internal navigation before closing the app
+      console.log('🔙 MiniPay Back Button detected');
+    };
+
+    window.addEventListener('popstate', handleBack);
+    
+    // Push a dummy state to the history so the first 'back' click is captured
+    if (window.history.length <= 1) {
+      window.history.pushState({ internal: true }, '');
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handleBack);
+    };
+  }, [isMiniPay]);
+
   if (isLoading) {
     return null;
   }

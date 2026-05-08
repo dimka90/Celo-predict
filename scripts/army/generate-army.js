@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 async function main() {
-    const armySize = 60;
+    const armySize = 250;
     const wallets = [];
 
     console.log(`Generating army of ${armySize} wallets...`);

@@ -30,11 +30,11 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://predinex.vercel.app'),
+  metadataBase: new URL('https://celo-predict-nine.vercel.app'),
   openGraph: {
     title: "CeloPredict - Decentralized Prediction Markets",
     description: "Trade on real-world outcomes with transparent, blockchain-powered markets on Celo with MiniPay",
-    url: "https://celopredict.vercel.app",
+    url: "https://celo-predict-nine.vercel.app",
     siteName: "CeloPredict",
     images: [
       {
@@ -54,6 +54,13 @@ export const metadata: Metadata = {
     creator: "@predinex_",
     images: ["/logo.png"],
   },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
+  themeColor: "#050B15", // Matches Predinex Dark Theme
   other: {
     "talentapp:project_verification": "67a035441b296ed90b5d5a3f40a3e445bc2aa8107cdd5ab211a62309ae4070d3e9d52c51bfdc78bd3b6e08a945fc4ec1e91afbc43f4a1d2c2a662f5615287a66",
   },
