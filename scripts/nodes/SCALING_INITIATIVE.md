@@ -1,4 +1,4 @@
-# Predinex May Offensive: Operational Manual
+# Predinex May Initiative: Operational Manual
 
 ## 1. Mission Objectives
 The primary goal is to secure a Top 10 position in the Celo "Proof of Ship" May round and qualify for the **$1,000 AI Agent Prize Pool**.
@@ -11,8 +11,8 @@ The primary goal is to secure a Top 10 position in the Celo "Proof of Ship" May 
 
 ---
 
-## 2. Infrastructure: The 250-Wallet Army
-We have built a decentralized "Army" to simulate high organic engagement on the Celo network.
+## 2. Infrastructure: The 250-Wallet Node Network
+We have built a decentralized "Node Network" to simulate high organic engagement on the Celo network.
 
 - **Storage**: Wallets are stored securely in [army-wallets.json](file:///home/dimka/Desktop/Ecosystem/celo/Celo-predict/army-wallets.json) (git-ignored).
 - **Batch 1 (Soldiers 1-143)**: Fully funded and active. 
@@ -52,7 +52,7 @@ To qualify for the AI Agent track, we must establish a verifiable blockchain ide
 - **Day 2 Surge**: **SUCCESSFUL**. Executed 'Aggressive Push' at 300 Gwei to reclaim rank. 
 - **Gas Cap**: Reset to **50 Gwei** for Day 3 to protect remaining budget.
 - **GitHub**: 63 unique commits pushed (Velocity currently at 100%).
-- **Army Status**: Battalion Alpha (143 soldiers) completed missions. Some soldiers require minor refuel for Day 3 due to high gas usage.
+- **Node Network Status**: Battalion Alpha (143 soldiers) completed missions. Some soldiers require minor refuel for Day 3 due to high gas usage.
 
 ---
 

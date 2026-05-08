@@ -39,7 +39,7 @@ async function main() {
                 // Get current nonce
                 let nonce = await wallet.getNonce();
                 console.log(`----------------------------------------------------`);
-                console.log(`Soldier ${soldier.id} (${soldier.address}) firing 5 transactions (Start Nonce: ${nonce}) [Attempt ${attempts + 1}]...`);
+                console.log(`Relay Agent ${soldier.id} (${soldier.address}) firing 5 transactions (Start Nonce: ${nonce}) [Attempt ${attempts + 1}]...`);
 
                 const feeData = await provider.getFeeData();
                 let maxPriorityFeePerGas = (feeData.maxPriorityFeePerGas || 0n) * 11n / 10n; // 1.1x priority
@@ -59,12 +59,12 @@ async function main() {
                         maxFeePerGas,
                         gasLimit: 100000n // Hardcoded to bypass estimation glitches
                     })
-                        .then(tx => console.log(`  Soldier ${soldier.id} (tx ${txCount + 1}): sent ${tx.hash}`))
+                        .then(tx => console.log(`  Relay Agent ${soldier.id} (tx ${txCount + 1}): sent ${tx.hash}`))
                         .catch(err => {
                             if (err.message.includes("already known")) {
-                                console.log(`  Soldier ${soldier.id} (tx ${txCount + 1}): already in mempool ✅`);
+                                console.log(`  Relay Agent ${soldier.id} (tx ${txCount + 1}): already in mempool ✅`);
                             } else {
-                                console.error(`  Soldier ${soldier.id} (tx ${txCount + 1}) failed: ${err.message}`);
+                                console.error(`  Relay Agent ${soldier.id} (tx ${txCount + 1}) failed: ${err.message}`);
                             }
                         });
                     promises.push(p);
@@ -78,7 +78,7 @@ async function main() {
 
             } catch (error) {
                 attempts++;
-                console.error(`  Soldier ${soldier.id} attempt ${attempts} failed:`, error.message);
+                console.error(`  Relay Agent ${soldier.id} attempt ${attempts} failed:`, error.message);
                 if (attempts < maxAttempts) {
                     console.log(`  Retrying in 2s...`);
                     await new Promise(r => setTimeout(r, 2000));
