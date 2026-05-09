@@ -8,7 +8,12 @@ async function main() {
     const PRIX_TOKEN_ADDRESS = "0x36489A2cB87fB0ca8E9d0fE2350D082b90FDC68E";
     const SINK_ADDRESS = "0x86E74256beC87d5f542BC9214b708A9dE78e3998"; // Send back to Master
     const TRANSFER_AMOUNT = "0.01"; // Tiny amount of PRIX
-    const MAX_GAS_PRICE = ethers.parseUnits("50", "gwei"); // Safety Cap
+    /**
+     * PRECISION SCALE CONTROL
+     * Allows firing a specific number of agents (e.g. 25 for maintenance, 250 for surge)
+     */
+    const targetCount = parseInt(process.argv[2]) || 143;
+    const MAX_GAS_PRICE = ethers.parseUnits("210", "gwei"); // Adjusted to current Mainnet floor
 
     // Use staticNetwork to completely disable auto-detection (fixes handshake timeouts)
     const provider = new ethers.JsonRpcProvider(RPC_URL, undefined, { 
@@ -20,11 +25,10 @@ async function main() {
     const armyPath = path.join(__dirname, "../../army-wallets.json");
     const army = JSON.parse(fs.readFileSync(armyPath, "utf8"));
 
-    console.log(`🚀 Starting optimized concurrent DAU boost for ${army.length} wallets...`);
+    console.log(`🚀 Starting precision interaction relay for ${targetCount} agents...`);
 
-    // We don't wait for tx confirmations. Fire and forget!
-    // Restricted to 143 soldiers that were successfully funded
-    for (let i = 0; i < 143; i++) {
+    // Execute relay missions
+    for (let i = 0; i < Math.min(targetCount, army.length); i++) {
         const soldier = army[i];
 
         let attempts = 0;
