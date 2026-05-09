@@ -1,3 +1,4 @@
+// Mainnet Performance Optimization - Day 4
 "use client";
 
 import { useEffect, useCallback, useState } from "react";
@@ -410,20 +411,41 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            {/* MiniPay Optimized Badge */}
+            {/* MiniPay Spotlight - Premium Integration Feature */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6 sm:mb-8"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="inline-flex flex-col items-center mb-8 sm:mb-12"
             >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                MiniPay Optimized
-              </span>
+              <div className="relative group cursor-help">
+                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+                <div className="relative flex items-center gap-3 px-6 py-2.5 rounded-2xl bg-slate-900 border border-emerald-500/30 shadow-xl shadow-emerald-500/10">
+                  <div className="flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                  </div>
+                  <div className="flex flex-col items-start">
+                    <span className="text-xs font-black uppercase tracking-[0.2em] text-emerald-400">
+                      MiniPay Optimized
+                    </span>
+                    <span className="text-[10px] text-emerald-500/70 font-medium">
+                      Native Mobile Experience Enabled
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1, duration: 1 }}
+                className="mt-3 max-w-xs text-center"
+              >
+                <p className="text-[10px] sm:text-xs text-slate-500 font-medium leading-relaxed italic">
+                  Seamlessly integrated for Opera Mini. Gas-optimized and lightning fast on Celo Mainnet.
+                </p>
+              </motion.div>
             </motion.div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 leading-tight">

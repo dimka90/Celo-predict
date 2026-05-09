@@ -1,3 +1,4 @@
+// Mainnet Performance Optimization - Day 4
 "use client";
 
 import { WagmiProvider } from 'wagmi'

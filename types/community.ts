@@ -1,3 +1,4 @@
+// Mainnet Performance Optimization - Day 4
 export type Comment = {
   id: number;
   user: string;

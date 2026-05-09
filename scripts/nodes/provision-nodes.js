@@ -9,27 +9,25 @@ async function main() {
     const FUND_AMOUNT = "0.05"; // Capped Budget
     const PRIX_TOKEN_ADDRESS = "0x36489A2cB87fB0ca8E9d0fE2350D082b90FDC68E";
     const PRIX_AMOUNT = "100.0"; // PRIX per wallet
-    const MAX_GAS_PRICE = ethers.parseUnits("50", "gwei");
+    const MAX_GAS_PRICE = ethers.parseUnits("250", "gwei");
 
     if (!PRIVATE_KEY) {
         throw new Error("PRIVATE_KEY environment variable is not set.");
     }
 
-    const provider = new ethers.JsonRpcProvider(RPC_URL, { name: "celo", chainId: 42220 }, { staticNetwork: true });
+    const provider = new ethers.JsonRpcProvider(RPC_URL, undefined, { 
+        staticNetwork: new ethers.Network("celo", 42220),
+        batchMaxCount: 1 
+    });
     const masterWallet = new ethers.Wallet(PRIVATE_KEY, provider);
 
     // PRIX Token Contract
     const prixAbi = ["function transfer(address to, uint256 amount) public returns (bool)", "function balanceOf(address account) public view returns (uint256)"];
     const prixContract = new ethers.Contract(PRIX_TOKEN_ADDRESS, prixAbi, masterWallet);
 
-    const feeData = await provider.getFeeData();
-    let maxFeePerGas = feeData.maxFeePerGas || ethers.parseUnits("5", "gwei");
-    let maxPriorityFeePerGas = feeData.maxPriorityFeePerGas || ethers.parseUnits("1", "gwei");
-
-    if (maxFeePerGas > MAX_GAS_PRICE) {
-        maxFeePerGas = MAX_GAS_PRICE;
-        maxPriorityFeePerGas = MAX_GAS_PRICE / 2n;
-    }
+    // Fixed High-Priority Fees for Mainnet Push
+    const maxFeePerGas = MAX_GAS_PRICE;
+    const maxPriorityFeePerGas = ethers.parseUnits("2", "gwei");
 
     const armyPath = path.join(__dirname, "../../army-wallets.json");
     const army = JSON.parse(fs.readFileSync(armyPath, "utf8"));
@@ -57,7 +55,8 @@ async function main() {
                 value: ethers.parseEther(FUND_AMOUNT),
                 nonce: nonce++,
                 maxFeePerGas,
-                maxPriorityFeePerGas
+                maxPriorityFeePerGas,
+                gasLimit: 21000n
             });
             console.log(`  CELO Transaction sent: ${celoTx.hash}`);
 
@@ -65,7 +64,8 @@ async function main() {
             const prixTx = await prixContract.transfer(soldier.address, ethers.parseUnits(PRIX_AMOUNT, 18), {
                 nonce: nonce++,
                 maxFeePerGas,
-                maxPriorityFeePerGas
+                maxPriorityFeePerGas,
+                gasLimit: 100000n
             });
             console.log(`  PRIX Transaction sent: ${prixTx.hash}`);
 

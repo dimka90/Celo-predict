@@ -1,3 +1,4 @@
+// Mainnet Performance Optimization - Day 4
 import type { Metadata } from "next";
 import "./globals.css";
 import "@/styles/appkit-custom.css";
