@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useWriteContract, usePublicClient } from 'wagmi';
-import { CONTRACT_ADDRESSES } from '@/config/wagmi';
+import { CONTRACT_ADDRESSES, GAS_SETTINGS } from '@/config/wagmi';
 import { toast } from 'react-hot-toast';
 import { parseEther } from 'viem';
 
@@ -61,6 +61,9 @@ export default function PlaceBetModal({
         functionName: 'placeBet',
         args: [BigInt(poolId), amount],
         value: amount,
+        gasPrice: GAS_SETTINGS.gasPrice,
+        maxFeePerGas: GAS_SETTINGS.maxFeePerGas,
+        maxPriorityFeePerGas: GAS_SETTINGS.maxPriorityFeePerGas,
       });
 
       toast.loading('Confirming bet...', { id: 'bet-confirm' });

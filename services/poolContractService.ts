@@ -12,33 +12,33 @@ import {
 import { CONTRACTS } from '@/contracts';
 import { processRawPoolData } from '@/utils/contractDataDecoder';
 
-// BSC Testnet configuration
-const bscTestnetChain = {
-  id: 97,
-  name: 'BSC Testnet',
+// Celo Mainnet configuration
+const celoMainnetChain = {
+  id: 42220,
+  name: 'Celo Mainnet',
   nativeCurrency: {
     decimals: 18,
-    name: 'BNB',
-    symbol: 'BNB',
+    name: 'CELO',
+    symbol: 'CELO',
   },
   rpcUrls: {
     default: {
       http: [
         process.env.NODE_ENV === 'development' 
           ? 'http://localhost:8080/api/rpc-proxy'
-          : process.env.NEXT_PUBLIC_RPC_URL || 'https://bsc-testnet-rpc.publicnode.com'
+          : process.env.NEXT_PUBLIC_RPC_URL || 'https://forno.celo.org'
       ],
     },
   },
   blockExplorers: {
-    default: { name: 'BscScan', url: 'https://testnet.bscscan.com' },
+    default: { name: 'CeloScan', url: 'https://celoscan.io' },
   },
-  testnet: true,
+  testnet: false,
 };
 
 export class PoolContractService {
   private static publicClient = createPublicClient({
-    chain: bscTestnetChain,
+    chain: celoMainnetChain,
     transport: http()
   });
 

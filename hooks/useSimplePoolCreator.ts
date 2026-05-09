@@ -1,5 +1,5 @@
 import { useAccount, useWriteContract, usePublicClient } from 'wagmi';
-import { CONTRACT_ADDRESSES } from '@/config/wagmi';
+import { CONTRACT_ADDRESSES, GAS_SETTINGS } from '@/config/wagmi';
 import { toast } from 'react-hot-toast';
 
 const SIMPLE_POOL_CREATOR_ABI = [
@@ -98,6 +98,9 @@ export function useSimplePoolCreator() {
         ],
         value: totalValue,
         account: address,
+        gasPrice: GAS_SETTINGS.gasPrice,
+        maxFeePerGas: GAS_SETTINGS.maxFeePerGas,
+        maxPriorityFeePerGas: GAS_SETTINGS.maxPriorityFeePerGas,
       });
 
       console.log('Pool creation transaction submitted:', txHash);

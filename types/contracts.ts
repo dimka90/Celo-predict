@@ -91,10 +91,10 @@ export const ORACLE_TYPE_LABELS = {
 
 // Boost tier labels and costs
 export const BOOST_TIER_CONFIG = {
-  [BoostTier.NONE]: { label: 'No Boost', cost: 0, costLabel: '0 BNB' },
-  [BoostTier.BRONZE]: { label: 'Bronze Boost', cost: 2e18, costLabel: '2 BNB' },
-  [BoostTier.SILVER]: { label: 'Silver Boost', cost: 3e18, costLabel: '3 BNB' },
-  [BoostTier.GOLD]: { label: 'Gold Boost', cost: 5e18, costLabel: '5 BNB' },
+  [BoostTier.NONE]: { label: 'No Boost', cost: 0, costLabel: '0 CELO' },
+  [BoostTier.BRONZE]: { label: 'Bronze Boost', cost: 2e18, costLabel: '2 CELO' },
+  [BoostTier.SILVER]: { label: 'Silver Boost', cost: 3e18, costLabel: '3 CELO' },
+  [BoostTier.GOLD]: { label: 'Gold Boost', cost: 5e18, costLabel: '5 CELO' },
 } as const;
 
 // Pool creation data interface
@@ -219,7 +219,7 @@ export function validatePoolData(data: PoolFormData): string[] {
   // Stake validation
   const minStake = data.usePrix ? 1000 : 5;
   if (!data.creatorStake || parseFloat(data.creatorStake) < minStake) {
-    errors.push(`Minimum stake is ${minStake} ${data.usePrix ? 'PRIX' : 'BNB'}`);
+    errors.push(`Minimum stake is ${minStake} ${data.usePrix ? 'PRIX' : 'CELO'}`);
   }
   
   return errors;
