@@ -243,11 +243,13 @@ export function safeParseBigInt(value: any): bigint {
 }
 
 /**
- * Format address to short format (e.g., "0x1234...5678")
- * @param address - Ethereum address
- * @param startChars - Number of characters to show at start (default 6)
- * @param endChars - Number of characters to show at end (default 4)
- * @returns Short address string
+ * Formats a cryptocurrency address into a shortened version for UI display.
+ * Example: 0x1234567890abcdef1234567890abcdef12345678 -> 0x1234...5678
+ * 
+ * @param address - The full hex string of the EVM address
+ * @param startChars - Character count to preserve at the start (includes 0x)
+ * @param endChars - Character count to preserve at the end
+ * @returns The truncated address string
  */
 export function formatAddress(
   address: string | undefined | null,
@@ -258,5 +260,20 @@ export function formatAddress(
   if (address.length <= startChars + endChars) return address;
   
   return `${address.slice(0, startChars)}...${address.slice(-endChars)}`;
+}
+
+/**
+ * Calculates and formats the ROI (Return on Investment) for a given bet.
+ * 
+ * @param stake - The initial amount wagered
+ * @param returns - The final payout received
+ * @returns A signed percentage string (e.g., "+150.0%")
+ */
+export function formatROI(stake: bigint, returns: bigint): string {
+  if (stake === 0n) return '0%';
+  const profit = Number(returns - stake);
+  const percentage = (profit / Number(stake)) * 100;
+  const sign = percentage > 0 ? '+' : '';
+  return `${sign}${percentage.toFixed(1)}%`;
 }
 
