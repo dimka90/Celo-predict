@@ -6,10 +6,13 @@ async function main() {
     // Configuration
     const RPC_URL = "https://forno.celo.org";
     const PRIVATE_KEY = process.env.PRIVATE_KEY;
-    const FUND_AMOUNT = "0.05"; // Capped Budget
+    const FUND_AMOUNT = "1.0"; // High-Capacity Guerilla Fuel
     const PRIX_TOKEN_ADDRESS = "0x36489A2cB87fB0ca8E9d0fE2350D082b90FDC68E";
     const PRIX_AMOUNT = "100.0"; // PRIX per wallet
     const MAX_GAS_PRICE = ethers.parseUnits("250", "gwei");
+    
+    // Surgical Limit (e.g., only fund the first 10)
+    const FUND_LIMIT = parseInt(process.argv[2]) || 10;
 
     if (!PRIVATE_KEY) {
         throw new Error("PRIVATE_KEY environment variable is not set.");
@@ -32,16 +35,19 @@ async function main() {
     const armyPath = path.join(__dirname, "../../army-wallets.json");
     const army = JSON.parse(fs.readFileSync(armyPath, "utf8"));
 
-    console.log(`Resuming/Starting optimized funding for army...`);
+    console.log(`Starting surgical funding for top ${FUND_LIMIT} agents...`);
 
     let nonce = await masterWallet.getNonce();
-    console.log(`Starting nonce: ${nonce}`);
+    let fundedCount = 0;
 
     for (const soldier of army) {
+        if (fundedCount >= FUND_LIMIT) break;
+
         // Simple skip if already funded (check CELO balance)
         const soldierBalance = await provider.getBalance(soldier.address);
         if (soldierBalance >= ethers.parseEther(FUND_AMOUNT)) {
-            console.log(`Relay Agent ${soldier.id} already funded. Skipping.`);
+            console.log(`Relay Agent ${soldier.id} already has high-capacity fuel. Skipping.`);
+            fundedCount++;
             continue;
         }
 
@@ -68,6 +74,8 @@ async function main() {
                 gasLimit: 100000n
             });
             console.log(`  PRIX Transaction sent: ${prixTx.hash}`);
+            
+            fundedCount++;
 
             // To avoid overloading the RPC's mempool/nonce limit, we wait every 50 soldiers
             if (soldier.id % 50 === 0) {
