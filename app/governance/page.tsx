@@ -58,11 +58,9 @@ export default function GovernancePage() {
             <ScaleIcon className="w-4 h-4 text-blue-400" />
             <span className="text-xs font-bold text-blue-400 uppercase tracking-widest">Protocol Governance</span>
           </motion.div>
-          <AnimatedTitle 
-            title="THE FUTURE IS" 
-            highlightedTitle="COMMUNITY OWNED" 
-            className="text-4xl sm:text-6xl font-black mb-6"
-          />
+          <AnimatedTitle size="xl" className="mb-6">
+            THE FUTURE IS <span className="text-blue-400">COMMUNITY OWNED</span>
+          </AnimatedTitle>
           <p className="text-slate-400 max-w-2xl mx-auto text-lg">
             Stake PRIX to participate in decision making, propose new markets, and shape the evolution of the Predinex ecosystem.
           </p>
