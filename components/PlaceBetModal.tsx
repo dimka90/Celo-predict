@@ -61,10 +61,11 @@ export default function PlaceBetModal({
         functionName: 'placeBet',
         args: [BigInt(poolId), amount],
         value: amount,
-        gasPrice: GAS_SETTINGS.gasPrice,
+        // @ts-ignore - Explicit gas for Celo Mainnet
         maxFeePerGas: GAS_SETTINGS.maxFeePerGas,
+        // @ts-ignore
         maxPriorityFeePerGas: GAS_SETTINGS.maxPriorityFeePerGas,
-      });
+      } as any);
 
       toast.loading('Confirming bet...', { id: 'bet-confirm' });
 

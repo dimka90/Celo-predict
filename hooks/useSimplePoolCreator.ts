@@ -98,10 +98,11 @@ export function useSimplePoolCreator() {
         ],
         value: totalValue,
         account: address,
-        gasPrice: GAS_SETTINGS.gasPrice,
+        // @ts-ignore - Explicit gas for Celo Mainnet
         maxFeePerGas: GAS_SETTINGS.maxFeePerGas,
+        // @ts-ignore
         maxPriorityFeePerGas: GAS_SETTINGS.maxPriorityFeePerGas,
-      });
+      } as any);
 
       console.log('Pool creation transaction submitted:', txHash);
       toast.success('Pool created successfully!');
