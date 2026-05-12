@@ -133,12 +133,12 @@ export const NETWORK_CONFIG = {
   explorerUrl: 'https://explorer.celo.org',
 }
 
-// Global gas settings - Optimized for Celo Network
+// Global gas settings - Optimized for Celo Network Congestion
 export const GAS_SETTINGS = {
   gas: BigInt(10000000), // 10M gas limit
-  gasPrice: BigInt(1000000000), // 1 gwei (Celo optimized - typically lower than Ethereum)
-  maxFeePerGas: BigInt(2000000000), // 2 gwei max fee
-  maxPriorityFeePerGas: BigInt(100000000), // 0.1 gwei priority fee
+  gasPrice: BigInt(250000000000), // 250 gwei (Optimized for current 202 Gwei floor)
+  maxFeePerGas: BigInt(300000000000), // 300 gwei max fee
+  maxPriorityFeePerGas: BigInt(5000000000), // 5 gwei priority fee
 }
 
 // Robust network connection settings - CELO SEPOLIA

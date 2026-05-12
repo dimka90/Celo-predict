@@ -22,7 +22,8 @@ import {
   ArrowTrendingUpIcon,
   LockClosedIcon,
   Squares2X2Icon,
-  SparklesIcon
+  SparklesIcon,
+  ScaleIcon
 } from "@heroicons/react/24/outline";
 import Button from "@/components/button";
 import { useProfileStore } from '@/stores/useProfileStore';

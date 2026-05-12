@@ -422,8 +422,7 @@ export default function HomePage() {
                 <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
                 <div className="relative flex items-center gap-3 px-6 py-2.5 rounded-2xl bg-slate-900 border border-emerald-500/30 shadow-xl shadow-emerald-500/10">
                   <div className="flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
                   </div>
                   <div className="flex flex-col items-start">
                     <span className="text-xs font-black uppercase tracking-[0.2em] text-emerald-400">
@@ -618,7 +617,7 @@ export default function HomePage() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="bg-slate-800/30 rounded-xl p-4 animate-pulse border border-slate-700/50"
+                  className="bg-slate-800/30 rounded-xl p-4 border border-slate-700/50"
                 >
                   <div className="h-48 bg-slate-700/50 rounded-lg"></div>
                 </motion.div>
