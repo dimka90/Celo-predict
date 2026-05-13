@@ -24,6 +24,7 @@ import { frontendCache } from "@/services/frontendCache";
 import { EnhancedPool } from "@/components/EnhancedPoolCard";
 import { PoolCardCatalog, PoolCardModal } from "@/components/PoolCard";
 import RecentBetsLane from "@/components/RecentBetsLane";
+import ProtocolHealth from "@/components/ProtocolHealth";
 
 export default function HomePage() {
   const [enhancedPools, setEnhancedPools] = useState<EnhancedPool[]>([]);
@@ -497,34 +498,41 @@ export default function HomePage() {
           <RecentBetsLane className="!p-3" />
         </motion.div>
 
-        {/* Platform Stats - Professional Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="bg-slate-800/30 backdrop-blur-xl border border-slate-700/50 rounded-xl p-4 sm:p-6 mb-8 sm:mb-12"
-        >
-          <div className="text-center mb-6">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                Live Platform Stats
-              </span>
-            </h2>
-            <p className="text-sm sm:text-base text-gray-400 max-w-2xl mx-auto">
-              Join thousands of predictors in the most advanced prediction ecosystem
-            </p>
+        {/* Protocol Health & Platform Stats */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 sm:mb-12">
+          {/* Real-time Health Monitor */}
+          <div className="lg:col-span-1">
+            <ProtocolHealth />
           </div>
-          
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-            <StatCard icon={CurrencyDollarIcon} label="Total Volume" value={stats.totalVolume} delay={0.1} />
-            <StatCard icon={TrophyIcon} label="Active Pools" value={stats.activePools} delay={0.2} />
-            <StatCard icon={UsersIcon} label="Participants" value={stats.participants} delay={0.3} />
-            <StatCard icon={StarIcon} label="Total Pools" value={stats.totalPools} delay={0.4} />
-            <StatCard icon={AcademicCapIcon} label="Boosted" value={stats.boostedPools} delay={0.5} />
-            <StatCard icon={ChartBarIcon} label="Trending" value={stats.trendingPools} delay={0.6} />
-          </div>
-        </motion.div>
+
+          {/* Platform Stats Summary */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="lg:col-span-2 bg-slate-800/30 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-4 sm:p-6"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-bold text-white mb-1">Live Analytics</h2>
+                <p className="text-xs text-slate-500 uppercase tracking-widest font-bold">Protocol Volume & Engagement</p>
+              </div>
+              <div className="hidden sm:block">
+                <div className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-black text-blue-400 uppercase tracking-widest">
+                  Live Updates
+                </div>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+              <StatCard icon={CurrencyDollarIcon} label="Total Volume" value={stats.totalVolume} delay={0.1} />
+              <StatCard icon={TrophyIcon} label="Active Pools" value={stats.activePools} delay={0.2} />
+              <StatCard icon={UsersIcon} label="Participants" value={stats.participants} delay={0.3} />
+              <StatCard icon={ChartBarIcon} label="Trending" value={stats.trendingPools} delay={0.4} />
+            </div>
+          </motion.div>
+        </div>
 
         {/* Features Section - Compact & Professional */}
         <motion.div
