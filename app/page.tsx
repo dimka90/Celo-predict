@@ -25,6 +25,7 @@ import { EnhancedPool } from "@/components/EnhancedPoolCard";
 import { PoolCardCatalog, PoolCardModal } from "@/components/PoolCard";
 import RecentBetsLane from "@/components/RecentBetsLane";
 import ProtocolHealth from "@/components/ProtocolHealth";
+import MarketIntelligence from "@/components/MarketIntelligence";
 
 export default function HomePage() {
   const [enhancedPools, setEnhancedPools] = useState<EnhancedPool[]>([]);
@@ -498,11 +499,16 @@ export default function HomePage() {
           <RecentBetsLane className="!p-3" />
         </motion.div>
 
-        {/* Protocol Health & Platform Stats */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 sm:mb-12">
+        {/* Intelligence Grid & Platform Stats */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8 sm:mb-12">
           {/* Real-time Health Monitor */}
           <div className="lg:col-span-1">
             <ProtocolHealth />
+          </div>
+
+          {/* Market Intelligence */}
+          <div className="lg:col-span-1">
+            <MarketIntelligence />
           </div>
 
           {/* Platform Stats Summary */}
