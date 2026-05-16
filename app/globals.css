@@ -105,11 +105,17 @@ body {
   .glass-card {
     background: rgba(31, 41, 55, 0.7);
     border: 1px solid rgba(255, 193, 7, 0.1);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(8px); /* Optimized from 12px for mobile */
+    -webkit-backdrop-filter: blur(8px);
     border-radius: 16px;
     padding: 24px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
+    
+    /* Performance Optimization for long lists */
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 300px;
+    contain: content;
   }
 
   .glass-card:hover {
